@@ -1,14 +1,12 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { profile, characterAssets } from '../data/portfolio';
 import { useFinePointer } from '../hooks/useMedia';
 import { EASE, SectionHeading } from './fx';
-import { playClick } from '../hooks/useSoundFX';
 
 export default function PortraitExperience() {
   const ref = useRef<HTMLDivElement>(null);
   const fine = useFinePointer();
-  const [artMode, setArtMode] = useState<'anime' | 'photo'>('anime');
 
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
@@ -122,66 +120,22 @@ export default function PortraitExperience() {
 
             {/* Cinematic Frame */}
             <div className="relative h-full w-full overflow-hidden rounded-2xl border border-white/15 bg-gradient-to-b from-ink-3 via-ink-2 to-ink shadow-[0_20px_80px_rgba(0,0,0,0.8)]">
-              {/* Top controls: metadata badge and switcher */}
-              <div className="absolute left-4 top-4 right-4 z-30 flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2 rounded-full border border-white/15 bg-ink/80 px-3 py-1 backdrop-blur-md">
-                  <span className="h-2 w-2 animate-pulse rounded-full bg-crimson" />
-                  <span className="font-sans text-[10px] font-bold tracking-widest text-bone uppercase">
-                    MASTER RECORD
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-1 p-0.5 rounded-full bg-ink/85 backdrop-blur-md border border-white/15">
-                  <button
-                    onClick={() => {
-                      playClick();
-                      setArtMode('anime');
-                    }}
-                    className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold transition cursor-pointer ${
-                      artMode === 'anime' ? 'bg-[#E50920] text-white shadow' : 'text-mist hover:text-white'
-                    }`}
-                  >
-                    🎨 Anime
-                  </button>
-                  <button
-                    onClick={() => {
-                      playClick();
-                      setArtMode('photo');
-                    }}
-                    className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold transition cursor-pointer ${
-                      artMode === 'photo' ? 'bg-[#38bdf8] text-[#08090D] font-bold shadow' : 'text-mist hover:text-white'
-                    }`}
-                  >
-                    📸 Real
-                  </button>
-                </div>
+              {/* Top metadata badge */}
+              <div className="absolute left-4 top-4 z-30 flex items-center gap-2 rounded-full border border-white/15 bg-ink/80 px-3 py-1 backdrop-blur-md">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-crimson" />
+                <span className="font-sans text-[10px] font-bold tracking-widest text-bone uppercase">
+                  MASTER RECORD • UK
+                </span>
               </div>
 
-              {/* The Image Display */}
-              {artMode === 'anime' ? (
-                /* Confident Arms-Crossed Anime Portrait */
-                <motion.img
-                  key="anime-portrait"
-                  src={characterAssets.confident.src}
-                  alt={characterAssets.confident.alt}
-                  className="w-full h-full object-cover object-top"
-                  animate={{ scale: [1, 1.03, 1] }}
-                  transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-                />
-              ) : (
-                /* Authentic Real Photo Cutout */
-                <motion.img
-                  key="real-portrait"
-                  src="/assets/portrait-720.webp"
-                  srcSet="/assets/portrait-420.webp 420w, /assets/portrait-720.webp 720w, /assets/portrait-1100.webp 1100w"
-                  sizes="(max-width: 640px) 380px, 480px"
-                  alt="Giridhar Reddy Goddilla"
-                  className="absolute inset-x-0 bottom-0 mx-auto h-[105%] w-auto max-w-none object-contain object-bottom drop-shadow-[0_25px_50px_rgba(0,0,0,0.9)] [mask-image:linear-gradient(to_bottom,black_75%,transparent_99%)]"
-                  initial={{ filter: 'brightness(0.7) blur(8px)', scale: 1.05 }}
-                  animate={{ filter: 'brightness(1) blur(0px)', scale: 1 }}
-                  transition={{ duration: 0.8, ease: EASE }}
-                />
-              )}
+              {/* Confident Arms-Crossed Anime Character Portrait */}
+              <motion.img
+                src={characterAssets.confident.src}
+                alt={characterAssets.confident.alt}
+                className="w-full h-full object-cover object-top"
+                animate={{ scale: [1, 1.03, 1] }}
+                transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
+              />
 
               {/* Ambient lighting overlays */}
               <div aria-hidden className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink via-transparent to-transparent opacity-80" />

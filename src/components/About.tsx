@@ -1,12 +1,8 @@
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { education, experience, profile, characterAssets } from '../data/portfolio';
 import { EASE, SectionHeading, Tilt } from './fx';
-import { playClick } from '../hooks/useSoundFX';
 
 export default function About() {
-  const [useArt, setUseArt] = useState(true);
-
   const facts = [
     { k: 'Postgraduate', v: 'MSc Data Science', s: `${education[0].school} (UK)` },
     { k: 'Industry Track', v: `${experience[0].role}, ${experience[0].company}`, s: `${experience[0].place} · Oct–Nov 2025` },
@@ -28,23 +24,14 @@ export default function About() {
         >
           <Tilt max={5} className="rounded-2xl">
             <div className="relative aspect-[4/5] overflow-hidden rounded-2xl ring-1 ring-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.8)] group">
-              {useArt ? (
-                /* Seated Executive Portrait (Anime illustration) */
-                <motion.img
-                  src={characterAssets.seated.src}
-                  alt={characterAssets.seated.alt}
-                  className="w-full h-full object-cover object-center"
-                  animate={{ scale: [1, 1.03, 1] }}
-                  transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
-                />
-              ) : (
-                /* Authentic Real Photo */
-                <img
-                  src="/assets/profile-real-clean.webp"
-                  alt={profile.fullName}
-                  className="w-full h-full object-cover object-top"
-                />
-              )}
+              {/* Seated Executive Portrait (Anime illustration) */}
+              <motion.img
+                src={characterAssets.seated.src}
+                alt={characterAssets.seated.alt}
+                className="w-full h-full object-cover object-center"
+                animate={{ scale: [1, 1.03, 1] }}
+                transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
+              />
 
               <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-ink via-ink/60 to-transparent" />
 
@@ -54,15 +41,9 @@ export default function About() {
                   <p className="text-[10px] font-bold tracking-[0.28em] text-[#ff3d5a] uppercase">THE PILOT EPISODE</p>
                   <p className="font-display text-3xl leading-none text-bone">{profile.displayName}</p>
                 </div>
-                <button
-                  onClick={() => {
-                    playClick();
-                    setUseArt((v) => !v);
-                  }}
-                  className="px-2.5 py-1 rounded-md bg-white/10 hover:bg-white/20 text-[10px] font-mono text-white/90 border border-white/15 transition cursor-pointer"
-                >
-                  {useArt ? '📸 View Real' : '🎨 View Art'}
-                </button>
+                <span className="px-2.5 py-1 rounded-md bg-white/10 text-[10px] font-mono text-white/90 border border-white/15">
+                  SEASONS 01–05
+                </span>
               </div>
             </div>
           </Tilt>

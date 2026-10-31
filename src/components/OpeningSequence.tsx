@@ -95,10 +95,8 @@ export default function OpeningSequence({ onDone }: { onDone: () => void }) {
       >
         <img
           src={profile.portrait.src}
-          srcSet={profile.portrait.srcSet}
-          sizes="(max-width: 768px) 100vw, 900px"
           alt={profile.portrait.alt}
-          className="h-full w-auto max-w-none object-contain object-bottom [mask-image:linear-gradient(to_bottom,black_55%,transparent_98%)]"
+          className="h-full w-auto max-w-none object-contain object-bottom [mask-image:linear-gradient(to_bottom,black_55%,transparent_98%)] rounded-3xl"
         />
       </motion.div>
       <div aria-hidden className="absolute inset-0 z-[1] bg-[radial-gradient(70%_60%_at_50%_40%,transparent_30%,rgba(0,0,0,0.85)_100%)]" />

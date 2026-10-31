@@ -80,7 +80,7 @@ export default function RecruiterDossier({
               <div className="relative group shrink-0">
                 <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-2xl overflow-hidden border-2 border-white/20 bg-[#11131A] shadow-xl">
                   <img
-                    src="/assets/profile-real-clean.webp"
+                    src="/assets/character/hero-portrait.webp"
                     alt={profile.fullName}
                     className="w-full h-full object-cover object-top"
                   />

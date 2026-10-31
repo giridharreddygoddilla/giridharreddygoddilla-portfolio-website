@@ -24,18 +24,17 @@ export const profile = {
   },
   resumePdf: '/assets/Giridhar_Reddy_Goddilla_Resume.pdf',
   portrait: {
-    src: '/assets/portrait-720.webp',
-    srcSet: '/assets/portrait-420.webp 420w, /assets/portrait-720.webp 720w, /assets/portrait-1100.webp 1100w',
-    alt: 'Portrait of Giridhar Reddy Goddilla',
-  },
-  realPhoto: {
-    src: '/assets/profile-real-clean.webp',
-    alt: 'Authentic photo of Giridhar Reddy Goddilla',
+    src: '/assets/character/hero-portrait.webp',
+    alt: 'Giridhar Reddy Goddilla - Character Illustration',
   },
   interests: ['Advanced Machine Learning', 'Big Data Engineering (PySpark)', 'Predictive Business Analytics', 'Business Intelligence & DAX'],
 };
 
 export const characterAssets = {
+  thumbnail: {
+    src: '/assets/character/walking-city.webp',
+    alt: 'Giridhar Reddy - Character Thumbnail',
+  },
   hero: {
     src: '/assets/character/hero-portrait.webp',
     alt: 'Giridhar Reddy - Signature Hero Portrait (Anime Aesthetic)',
@@ -71,12 +70,6 @@ export const characterAssets = {
     alt: 'Giridhar Reddy - Seated Executive Portrait',
     label: 'Seated Executive',
     mood: 'Thoughtful posture, hand on chin, warm architectural office illumination',
-  },
-  realPhoto: {
-    src: '/assets/profile-real-clean.webp',
-    alt: 'Giridhar Reddy Goddilla - Official Photograph',
-    label: 'Authentic Photograph',
-    mood: 'Authentic professional studio portrait with glasses and navy shirt',
   },
 };
 

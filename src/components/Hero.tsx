@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { motion, useMotionValue, useScroll, useSpring, useTransform } from 'framer-motion';
 import { certifications, profile, projects, characterAssets, type ProfileId } from '../data/portfolio';
 import { useFinePointer } from '../hooks/useMedia';
@@ -27,7 +27,6 @@ export default function Hero({
   const ref = useRef<HTMLElement>(null);
   const fine = useFinePointer();
   const { scrollTo } = useSmoothScroll();
-  const [artMode, setArtMode] = useState<'anime' | 'photo'>('anime');
 
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
   const imgY = useTransform(scrollYProgress, [0, 1], ['0%', '16%']);
@@ -79,67 +78,27 @@ export default function Hero({
           className="relative h-full w-full max-w-[480px] lg:max-w-none lg:h-[84vh] flex items-center justify-center p-4 lg:p-8"
           style={{ rotateY: imgRotY, rotateX: imgRotX, x: imgShiftX, transformPerspective: 1200 }}
         >
-          {artMode === 'anime' ? (
-            /* Animated Character Art with subtle Ken Burns breathing motion */
-            <div className="relative w-full max-w-[440px] aspect-[4/5] rounded-3xl overflow-hidden border border-white/15 bg-gradient-to-b from-[#181B24] to-[#08090D] shadow-[0_25px_80px_rgba(0,0,0,0.85)] group">
-              <motion.img
-                src={characterAssets.hero.src}
-                alt={characterAssets.hero.alt}
-                className="w-full h-full object-cover object-top"
-                animate={{ scale: [1, 1.04, 1] }}
-                transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#08090D] via-transparent to-transparent opacity-80" />
-              <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs">
-                <div>
-                  <span className="font-mono text-[10px] text-[#D6AD62] uppercase tracking-wider block font-bold">
-                    Signature Identity
-                  </span>
-                  <span className="font-sans font-bold text-white text-sm">GIRIDHAR REDDY</span>
-                </div>
-                <span className="px-2 py-0.5 rounded bg-white/10 font-mono text-[10px] text-[#38bdf8] border border-white/10">
-                  Anime Film Series
+          {/* Animated Character Art with subtle Ken Burns breathing motion */}
+          <div className="relative w-full max-w-[440px] aspect-[4/5] rounded-3xl overflow-hidden border border-white/15 bg-gradient-to-b from-[#181B24] to-[#08090D] shadow-[0_25px_80px_rgba(0,0,0,0.85)] group">
+            <motion.img
+              src={characterAssets.hero.src}
+              alt={characterAssets.hero.alt}
+              className="w-full h-full object-cover object-top"
+              animate={{ scale: [1, 1.04, 1] }}
+              transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#08090D] via-transparent to-transparent opacity-80" />
+            <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs">
+              <div>
+                <span className="font-mono text-[10px] text-[#D6AD62] uppercase tracking-wider block font-bold">
+                  Signature Identity
                 </span>
+                <span className="font-sans font-bold text-white text-sm">GIRIDHAR REDDY</span>
               </div>
+              <span className="px-2 py-0.5 rounded bg-white/10 font-mono text-[10px] text-[#38bdf8] border border-white/10">
+                Anime Film Series
+              </span>
             </div>
-          ) : (
-            /* Authentic Cutout Photograph */
-            <div className="relative w-full h-full flex items-end justify-center">
-              <div aria-hidden className="absolute bottom-[8%] left-1/2 h-[75%] w-[75%] -translate-x-1/2 rounded-full border border-crimson/20 shadow-[0_0_120px_rgba(229,9,32,0.3),inset_0_0_80px_rgba(229,9,32,0.15)]" />
-              <img
-                src={profile.portrait.src}
-                srcSet={profile.portrait.srcSet}
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                alt={profile.portrait.alt}
-                className="relative h-full w-auto max-w-none object-contain object-bottom drop-shadow-[0_30px_60px_rgba(0,0,0,0.8)] [mask-image:linear-gradient(to_bottom,black_70%,transparent_98%)]"
-              />
-            </div>
-          )}
-
-          {/* Interactive Art / Photo Switcher Pill */}
-          <div className="absolute top-2 sm:top-4 right-4 lg:right-8 z-20 flex items-center gap-1 p-1 rounded-full bg-[#11131A]/85 backdrop-blur-md border border-white/15 shadow-lg">
-            <button
-              onClick={() => {
-                playClick();
-                setArtMode('anime');
-              }}
-              className={`px-3 py-1 rounded-full text-[11px] font-semibold transition cursor-pointer ${
-                artMode === 'anime' ? 'bg-[#E50920] text-white shadow' : 'text-[#A3A6B0] hover:text-white'
-              }`}
-            >
-              🎨 Anime Art
-            </button>
-            <button
-              onClick={() => {
-                playClick();
-                setArtMode('photo');
-              }}
-              className={`px-3 py-1 rounded-full text-[11px] font-semibold transition cursor-pointer ${
-                artMode === 'photo' ? 'bg-[#38bdf8] text-[#08090D] font-bold shadow' : 'text-[#A3A6B0] hover:text-white'
-              }`}
-            >
-              📸 Real Photo
-            </button>
           </div>
         </motion.div>
       </motion.div>

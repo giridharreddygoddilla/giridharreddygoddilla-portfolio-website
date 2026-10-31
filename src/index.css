@@ -88,19 +88,17 @@ body {
   display: none;
 }
 
-/* Custom cursor — desktop fine-pointer only */
-@media (hover: hover) and (pointer: fine) {
-  .has-custom-cursor,
-  .has-custom-cursor a,
-  .has-custom-cursor button,
-  .has-custom-cursor [role='button'] {
-    cursor: none;
-  }
-  .has-custom-cursor input,
-  .has-custom-cursor textarea,
-  .has-custom-cursor select {
-    cursor: text !important;
-  }
+/* Standard Native System Cursors */
+button,
+a,
+[role='button'] {
+  cursor: pointer;
+}
+
+input,
+textarea,
+[contenteditable='true'] {
+  cursor: text;
 }
 
 .text-outline {
