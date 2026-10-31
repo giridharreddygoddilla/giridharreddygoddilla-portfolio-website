@@ -10,17 +10,16 @@ export const profile = {
   displayName: 'Giridhar Reddy',
   firstName: 'GIRIDHAR',
   seriesTag: 'THE SERIES',
-  /** Fictional studio card shown at the very start of the opening sequence. */
   originalLabel: 'A GODDILLA ORIGINAL',
   role: 'Data Analyst & Data Scientist',
   tagline: ['Data Analyst', 'MSc Data Science', 'Machine Learning & BI'],
   intro:
-    'An MSc Data Science student at the University of Hertfordshire (UK) and Data Analyst specializing in business intelligence, Python ETL workflows, predictive modeling, and interactive Power BI & Tableau dashboards.',
+    'Data analytics and data science professional with experience across data analysis, business intelligence, Python-based ETL workflows, interactive dashboard development, and machine learning. Skilled in using Python, SQL, Excel, Power BI, and Tableau to clean and transform data, explore trends, monitor KPIs, and communicate findings. Currently pursuing an MSc in Data Science at the University of Hertfordshire (UK).',
   location: 'Luton, United Kingdom',
   email: 'giridharreddygoddilla@gmail.com',
   phone: '+44 7765508654',
   links: {
-    linkedin: 'https://www.linkedin.com/in/giridharreddygoddilla',
+    linkedin: 'https://www.linkedin.com/in/giridharreddygoddilla/',
     github: 'https://github.com/giridharreddygoddilla',
   },
   resumePdf: '/assets/Giridhar_Reddy_Goddilla_Resume.pdf',
@@ -29,7 +28,56 @@ export const profile = {
     srcSet: '/assets/portrait-420.webp 420w, /assets/portrait-720.webp 720w, /assets/portrait-1100.webp 1100w',
     alt: 'Portrait of Giridhar Reddy Goddilla',
   },
-  interests: ['Advanced Machine Learning', 'Big Data Engineering (PySpark)', 'Predictive Business Analytics'],
+  realPhoto: {
+    src: '/assets/profile-real-clean.webp',
+    alt: 'Authentic photo of Giridhar Reddy Goddilla',
+  },
+  interests: ['Advanced Machine Learning', 'Big Data Engineering (PySpark)', 'Predictive Business Analytics', 'Business Intelligence & DAX'],
+};
+
+export const characterAssets = {
+  hero: {
+    src: '/assets/character/hero-portrait.webp',
+    alt: 'Giridhar Reddy - Signature Hero Portrait (Anime Aesthetic)',
+    label: 'Signature Hero Portrait',
+    mood: 'Warm atmospheric studio lighting, wavy hair, glasses, confident subtle smile',
+  },
+  developer: {
+    src: '/assets/character/developer-workspace.webp',
+    alt: 'Giridhar Reddy - Developer Workspace at Dual-Monitor Setup',
+    label: 'Developer Workstation',
+    mood: 'Multi-monitor setup, machine learning pipelines, dark navy shirt, blue monitor glow',
+  },
+  walking: {
+    src: '/assets/character/walking-city.webp',
+    alt: 'Giridhar Reddy - Walking in Modern City',
+    label: 'Cinematic Journey',
+    mood: 'Full-body shot walking in modern architectural city, golden hour lighting',
+  },
+  confident: {
+    src: '/assets/character/confident-arms-crossed.webp',
+    alt: 'Giridhar Reddy - Confident Studio Portrait',
+    label: 'Confident Professional',
+    mood: 'Studio waist-up, arms crossed, warm golden rim lighting',
+  },
+  calmCity: {
+    src: '/assets/character/calm-city-smile.webp',
+    alt: 'Giridhar Reddy - Approachable City Portrait',
+    label: 'City Plaza Smile',
+    mood: 'Warm daylight, modern plaza, approachable confident expression',
+  },
+  seated: {
+    src: '/assets/character/seated-executive.webp',
+    alt: 'Giridhar Reddy - Seated Executive Portrait',
+    label: 'Seated Executive',
+    mood: 'Thoughtful posture, hand on chin, warm architectural office illumination',
+  },
+  realPhoto: {
+    src: '/assets/profile-real-clean.webp',
+    alt: 'Giridhar Reddy Goddilla - Official Photograph',
+    label: 'Authentic Photograph',
+    mood: 'Authentic professional studio portrait with glasses and navy shirt',
+  },
 };
 
 export const education = [
@@ -37,16 +85,16 @@ export const education = [
     school: 'University of Hertfordshire',
     place: 'Hatfield, UK',
     degree: 'Master of Science — Data Science',
-    period: 'September 2024 – September 2026',
-    score: 'MSc Candidate',
+    period: 'Sep 2024 – Sep 2026',
+    score: 'MSc Candidate (In Progress)',
     coursework: 'Data Science, Data Analytics, Machine Learning, Statistical Modelling, Deep Learning, NLP, CNNs and LSTMs',
   },
   {
     school: 'Lovely Professional University',
     place: 'Punjab, India',
     degree: 'Bachelor of Technology — Computer Science and Engineering',
-    period: 'August 2019 – August 2023',
-    score: 'First Class',
+    period: 'Aug 2019 – Aug 2023',
+    score: 'First Class Degree',
     coursework: 'Data Structures and Algorithms, OOP with Python, DBMS, SQL, Data Science Foundations, Power BI and Tableau',
   },
 ];
@@ -54,20 +102,21 @@ export const education = [
 export const experience = [
   {
     company: 'Victoria Solutions',
-    role: 'Data Analyst Trainee',
+    role: 'Data Analyst Intern',
     place: 'London, UK',
-    period: 'October 2025 – November 2025',
+    period: 'Oct 2025 – Nov 2025',
     points: [
-      'Performed end-to-end analysis of retail datasets using Excel, SQL, and Python, including data cleaning, exploratory analysis, and transformation.',
-      'Designed interactive Power BI and Tableau dashboards to monitor revenue, category performance, and discount effectiveness.',
-      'Identified pricing and seasonal trends to support discount-strategy optimisation and revenue outcomes.',
+      'Built an interactive Excel dashboard on 197,430 Swiggy food records (Jan–Aug 2025), tracking five KPIs: INR 53.01M sales, INR 268.51 average order value, 4.34 average rating, 5.59M ratings, and 197K records.',
+      'Engineered day, quarter, week, and veg/non-veg fields using TEXT, WEEKNUM, SEARCH, and IF formulas; analysed sales by month, weekday, quarter, state, and city with PivotTables and month, restaurant, and category slicers.',
+      'Identified steady daily sales of about INR 218K across quarters, a Saturday peak (INR 7.78M), and five cities generating 33% of sales, separating calendar effects (a 28-day February, a two-month Q3) from genuine change.',
+      'Designed interactive Power BI and Tableau dashboards on retail datasets (data prepared in Excel, SQL, and Python) to monitor revenue, category performance, and discount effectiveness, and identified pricing and seasonal trends to support discount-strategy optimisation.',
     ],
   },
   {
     company: 'FOURP Technology Solutions Private Limited',
     role: 'Software Engineer',
     place: 'Chennai, India',
-    period: 'September 2022 – August 2024',
+    period: 'Sep 2022 – Aug 2024',
     points: [
       'Delivered robust SQL database querying, Microsoft Excel modeling, automated reporting, and backend data processing workflows.',
       'Engineered relational database queries, views, and data integrity validations supporting business operations.',
@@ -75,13 +124,15 @@ export const experience = [
     ],
   },
   {
-    company: 'Teachnook – E-Box',
-    role: 'Data Science & Python Intern',
+    company: 'E-Box',
+    role: 'Python Intern',
     place: 'Bengaluru, India',
-    period: 'May 2021 – August 2021',
+    period: 'May 2021 – Aug 2021',
     points: [
-      'Developed Python-based data analysis projects involving data cleaning, visualization, and statistical modeling.',
-      'Constructed exploratory data pipelines with Pandas, NumPy, and Matplotlib to surface actionable patterns.',
+      'Developed Python-based data analysis projects involving data cleaning, visualisation, and basic modelling.',
+      'Built a supply chain analytics project on the DataCo dataset: cleaned and validated 180,519 order-item records (65,752 unique orders) in pandas and defined KPIs with documented denominators, reporting $36.78M sales, $3.97M profit, and a 57.29% late-delivery rate.',
+      'Analysed delivery performance by shipping mode, finding scheduled-versus-actual days drove lateness (First Class 100% late) and flagging a data-definition issue.',
+      'Examined profitability by category, product, and discount, identifying 18.71% of order items with negative profit.',
     ],
   },
 ];
@@ -107,32 +158,64 @@ export type Project = {
 export const projects: Project[] = [
   {
     id: 'fake-job-detection',
-    title: 'Fake Job Detection with ML & NLP',
+    title: 'Fake Job Posting Detection Using ML & NLP',
     year: '2026',
     genre: 'Machine Learning • NLP • Fraud Analytics',
     logline: 'An end-to-end fraud detection pipeline classifying fraudulent job postings with 97.32% accuracy and 0.793 PR-AUC under severe class imbalance.',
     stack: ['Python', 'NLP', 'TF-IDF', 'LightGBM', 'XGBoost', 'Scikit-learn'],
     build: [
-      'Built an end-to-end fraud detection pipeline using exploratory data analysis, text preprocessing, TF-IDF vectorization, and engineered features to identify fraudulent job postings in a highly imbalanced dataset (4.8% fraud).',
+      'Built an end-to-end fraud detection pipeline using exploratory data analysis, text preprocessing, TF-IDF, and engineered features to identify fraudulent job postings in a highly imbalanced dataset (4.8% fraud).',
       'Trained and compared LightGBM, XGBoost, SVM, and Gradient Boosting using fraud-class precision, recall, F1-score, PR-AUC, and precision-recall curves to assess performance under class imbalance.',
       'Achieved 97.32% accuracy with LightGBM, the strongest overall balance with a fraud-class F1-score of 0.706 and PR-AUC of 0.793; evaluated decision thresholds to support fraud-screening trade-offs.',
     ],
     features: [
-      'TF-IDF text feature extraction & tokenization',
-      'Heavy class-imbalance mitigation (4.8% baseline)',
+      'TF-IDF text preprocessing & feature tokenization',
+      'Extreme class-imbalance mitigation (4.8% fraud baseline)',
       'Multi-model benchmarking: LightGBM vs XGBoost vs SVM',
-      'Precision-Recall AUC (PR-AUC) optimization',
-      'Custom threshold calibration for operational fraud screening',
+      'Precision-Recall AUC (0.793 PR-AUC) calibration',
+      'Operational decision-threshold trade-off analysis',
     ],
     metrics: [
       { value: '97.32%', label: 'accuracy' },
       { value: '0.793', label: 'PR-AUC' },
       { value: '0.706', label: 'fraud F1-score' },
-      { value: '4.8%', label: 'class imbalance handled' },
-      { value: '4', label: 'ML models benchmarked' },
+      { value: '4.8%', label: 'fraud class baseline' },
+      { value: '4', label: 'models evaluated' },
     ],
+    github: 'https://github.com/giridharreddygoddilla',
     palette: { from: '#2a0610', via: '#7a0f24', to: '#0b0710', accent: '#ff3d5a' },
     motif: 'shield',
+  },
+  {
+    id: 'uber-trip-analysis',
+    title: 'Uber Trip Analysis Dashboard Using Power BI',
+    year: '2024',
+    genre: 'Business Intelligence • DAX • Power BI',
+    logline: 'A 3-page interactive Power BI dashboard evaluating 103,728 Uber bookings ($1.55M booking value) tracking 6 core operational KPIs and demand distributions.',
+    stack: ['Power BI', 'DAX', 'Data Modeling', 'Excel', 'KPI Reporting'],
+    build: [
+      'Built a three-page Power BI dashboard (Overview, Time Analysis, Trip Details) on 103,728 Uber bookings from June 2024 ($1.55M booking value), tracking six KPIs including average booking value ($14.98), trip distance, and trip time.',
+      'Developed DAX measures and a disconnected-table measure selector with dynamic titles, so one control switches visuals between bookings, value, and distance; added slicers, bookmarks, and a trip-level details grid.',
+      'Analysed demand by hour, weekday, vehicle, payment type, and location, finding UberX drives 37% of bookings, night trips (17:00–05:59) 37% of booking value, and Penn Station the top pickup zone (4,475 trips).',
+      'Validated dashboard totals against the source data and flagged outlier trips (144-mile, 24-hour durations) that inflate average trip time, documenting limitations in the README.',
+    ],
+    features: [
+      'Three-page executive suite: Overview, Time Analysis & Trip Details',
+      'Dynamic disconnected-table measure selector with custom DAX',
+      'Demand concentration analysis: UberX 37% & night trip distribution',
+      'Top pickup zone identification: Penn Station (4,475 trips)',
+      'Outlier isolation (144-mile, 24-hr anomaly trips) and data reconciliation',
+    ],
+    metrics: [
+      { value: '103,728', label: 'Uber bookings analyzed' },
+      { value: '$1.55M', label: 'booking value tracked' },
+      { value: '$14.98', label: 'average booking value' },
+      { value: '3-Page', label: 'interactive Power BI dashboard' },
+      { value: '37%', label: 'UberX booking share' },
+    ],
+    github: 'https://github.com/giridharreddygoddilla',
+    palette: { from: '#051824', via: '#0c4a6e', to: '#020d14', accent: '#38bdf8' },
+    motif: 'tenants',
   },
   {
     id: 'amazon-bestsellers-pyspark',
@@ -305,8 +388,8 @@ export const certifications: Certification[] = [
   { issuer: 'Victoria Solutions', name: 'Certificate of Excellence — Retail Data Analytics' },
   { issuer: 'University of Hertfordshire', name: 'Student Representative Award' },
   { issuer: '360DigiTMG', name: 'Excellent Project Award — Data Analytics & ML' },
-  { issuer: 'Microsoft / DataCamp', name: 'Power BI Data Analyst & Dashboard Specialization' },
-  { issuer: 'SQL & Database Systems', name: 'Advanced Relational Database Design & Analytics' },
+  { issuer: 'School Level', name: 'Distinction Level Science Exhibition Award' },
+  { issuer: 'Power BI & SQL', name: 'Interactive Executive Dashboard & DAX Specialization' },
   { issuer: 'Python for Data Science', name: 'Applied Machine Learning & Statistical Modeling' },
 ];
 
@@ -317,7 +400,7 @@ export const skillCategories: SkillCategory[] = [
   {
     id: 'languages',
     title: 'Core Languages',
-    subtitle: 'Python & SQL are the daily drivers',
+    subtitle: 'Python, SQL & R are the daily drivers',
     skills: [
       { name: 'Python', mono: 'Py', note: 'Primary' },
       { name: 'SQL', mono: 'Sq', note: 'Primary' },
@@ -330,12 +413,12 @@ export const skillCategories: SkillCategory[] = [
     title: 'Analytics & EDA',
     subtitle: 'Data wrangling & insights',
     skills: [
-      { name: 'Data Cleaning', mono: 'Dc' },
-      { name: 'Exploratory Data Analysis (EDA)', mono: 'Eda' },
+      { name: 'Data Cleaning & EDA', mono: 'Dc' },
       { name: 'Pandas', mono: 'Pd' },
       { name: 'NumPy', mono: 'Np' },
-      { name: 'Statistical Modelling', mono: 'Sm' },
       { name: 'ETL Workflows', mono: 'Etl' },
+      { name: 'KPI Reporting', mono: 'Kpi' },
+      { name: 'Data Visualisation', mono: 'Dv' },
     ],
   },
   {
@@ -345,10 +428,9 @@ export const skillCategories: SkillCategory[] = [
     skills: [
       { name: 'Power BI', mono: 'Pbi', note: 'Featured' },
       { name: 'Tableau', mono: 'Tb' },
-      { name: 'Microsoft Excel', mono: 'Xls', note: 'Advanced' },
-      { name: 'KPI Reporting', mono: 'Kpi' },
-      { name: 'Data Visualisation', mono: 'Dv' },
-      { name: 'Matplotlib & Seaborn', mono: 'Plt' },
+      { name: 'Excel, PivotTables', mono: 'Xls', note: 'Advanced' },
+      { name: 'DAX Measures', mono: 'Dax' },
+      { name: 'Matplotlib, Seaborn', mono: 'Plt' },
     ],
   },
   {
@@ -359,7 +441,7 @@ export const skillCategories: SkillCategory[] = [
       { name: 'Scikit-learn', mono: 'Skl' },
       { name: 'LightGBM', mono: 'Lgb' },
       { name: 'XGBoost', mono: 'Xgb' },
-      { name: 'Classification & Regression', mono: 'Cr' },
+      { name: 'Statistical Modelling', mono: 'Sm' },
       { name: 'Clustering & Anomaly Detection', mono: 'Cad' },
       { name: 'PR-AUC Evaluation', mono: 'Auc' },
     ],
@@ -371,8 +453,8 @@ export const skillCategories: SkillCategory[] = [
     skills: [
       { name: 'TensorFlow', mono: 'Tf' },
       { name: 'Keras', mono: 'Ks' },
-      { name: 'LSTMs & Time Series', mono: 'Lstm' },
-      { name: 'CNNs', mono: 'Cnn' },
+      { name: 'CNNs & LSTMs', mono: 'Cnn' },
+      { name: 'Time Series Forecasting', mono: 'Ts' },
       { name: 'Natural Language Processing (NLP)', mono: 'Nlp' },
       { name: 'TF-IDF Vectorization', mono: 'Tf' },
     ],
@@ -383,45 +465,41 @@ export const skillCategories: SkillCategory[] = [
     subtitle: 'Scalable processing & data platforms',
     skills: [
       { name: 'PySpark', mono: 'Spk', note: 'Distributed' },
-      { name: 'Microsoft Fabric', mono: 'Fab' },
-      { name: 'Azure Cloud', mono: 'Az' },
-      { name: 'REST APIs', mono: 'Api' },
+      { name: 'Relational Database Design', mono: 'Rdb' },
+      { name: 'Multimodal Classification', mono: 'Mmc' },
+      { name: 'REST APIs & Web Data', mono: 'Api' },
     ],
   },
   {
     id: 'tools',
     title: 'Developer Tools',
-    subtitle: 'Reproducibility & version control',
+    subtitle: 'Reproducibility & environment',
     skills: [
-      { name: 'Git & GitHub', mono: 'Git' },
-      { name: 'Jupyter Notebook', mono: 'Jup' },
+      { name: 'Git, GitHub', mono: 'Git' },
+      { name: 'Jupyter', mono: 'Jup' },
       { name: 'VS Code', mono: 'Vsc' },
       { name: 'Spyder', mono: 'Spy' },
     ],
   },
 ];
 
-/**
- * Factual cross-references shown when a skill card is hovered/tapped:
- * where the skill appears in the projects, certifications or achievements on the resume.
- */
 export const skillEvidence: Record<string, string[]> = {
-  Python: ['Fake Job Posting Detection', 'Deliveroo Metrics Analysis', 'Amazon PySpark', 'Oil Price Forecasting'],
+  Python: ['Fake Job Posting Detection', 'Deliveroo Metrics Analysis', 'Amazon PySpark', 'Oil Price Forecasting', 'E-Box Internship'],
   SQL: ['FOURP Technology Solutions', 'Victoria Solutions', 'Deliveroo Metrics Analysis', 'Relational Database Design'],
-  'Power BI': ['Victoria Solutions (London)', 'Deliveroo Metrics Analysis', 'Retail KPI Dashboards'],
+  'Power BI': ['Victoria Solutions (London)', 'Uber Trip Analysis Dashboard', 'Deliveroo Metrics Analysis'],
   Tableau: ['Victoria Solutions', 'Retail Revenue Monitoring', 'Interactive Visualizations'],
-  'Microsoft Excel': ['Victoria Solutions', 'FOURP Technology Solutions', 'Financial & Sales Modeling'],
+  'Excel, PivotTables': ['Victoria Solutions (197K Swiggy records)', 'FOURP Technology Solutions', 'Uber Trip Analysis'],
   PySpark: ['Amazon Bestsellers Analysis with PySpark', 'Distributed Big Data Processing'],
   'LightGBM': ['Fake Job Detection (97.32% Accuracy, 0.793 PR-AUC)'],
   XGBoost: ['Fake Job Detection Benchmark', 'Machine Learning Classification'],
   'Scikit-learn': ['Sales Anomaly Detection', 'Fake Job Posting Detection', 'Statistical Modeling'],
   'TensorFlow': ['Oil Price Forecasting (LSTM Neural Networks)', 'MSc Coursework @ Hertfordshire'],
   'Keras': ['Oil Price Forecasting', 'Deep Learning Neural Networks'],
-  'LSTMs & Time Series': ['Brent & WTI Crude Oil Price Forecasting', 'MSc Data Science Curriculum'],
+  'CNNs & LSTMs': ['Brent & WTI Crude Oil Price Forecasting', 'MSc Data Science Curriculum'],
+  'Time Series Forecasting': ['Oil Price Forecasting (ARIMA & LSTM Case Study)'],
   'Natural Language Processing (NLP)': ['Fake Job Detection with TF-IDF', 'MSc NLP Coursework'],
-  'Data Cleaning': ['Victoria Solutions Trainee', 'Amazon Bestsellers', 'Deliveroo Analytics'],
-  'Exploratory Data Analysis (EDA)': ['Deliveroo Metrics Analysis', 'Amazon Bestsellers', 'Fake Job Detection'],
-  'Git & GitHub': ['github.com/giridharreddygoddilla', 'Open-source code repositories'],
+  'Data Cleaning & EDA': ['Victoria Solutions Trainee', 'Amazon Bestsellers', 'Deliveroo Analytics', 'E-Box (180K records)'],
+  'Git, GitHub': ['github.com/giridharreddygoddilla', 'Open-source code repositories'],
 };
 
 export type Episode = {
@@ -465,8 +543,8 @@ export const seasons: Season[] = [
       {
         code: 'S01 E02',
         title: 'The Analytics Awakening',
-        description: 'Data Science & Python Intern at Teachnook – E-Box in Bengaluru, applying exploratory data analysis, data cleaning, and statistical modeling to real datasets.',
-        tags: ['Teachnook', 'Data Science Intern', 'EDA', 'Pandas'],
+        description: 'Python Intern at E-Box in Bengaluru, analyzing 180,519 order-item records on DataCo supply chain dataset, defining KPIs and uncovering shipping latency drivers.',
+        tags: ['E-Box', 'Python Intern', '180K Records', 'Pandas'],
         runtime: 'May 2021 – Aug 2021',
         palette: violet,
       },
@@ -516,13 +594,13 @@ export const seasons: Season[] = [
     number: 3,
     title: 'Industry Impact in London',
     period: '2025',
-    synopsis: 'Data Analyst Trainee at Victoria Solutions in London — turning commercial retail datasets into executive dashboards and pricing optimization strategies.',
+    synopsis: 'Data Analyst Intern at Victoria Solutions in London — turning 197,430 Swiggy food records into executive dashboards and pricing optimization strategies.',
     episodes: [
       {
         code: 'S03 E01',
         title: 'Retail Intelligence',
-        description: 'Conducted end-to-end data cleaning, SQL transformation, and exploratory trend analysis on complex retail datasets at Victoria Solutions.',
-        tags: ['Victoria Solutions', 'London, UK', 'Retail Data'],
+        description: 'Built an interactive Excel dashboard on 197,430 Swiggy food records tracking 5 KPIs (INR 53.01M sales, 4.34 avg rating, 5.59M ratings), analyzing weekday and quarter patterns.',
+        tags: ['Victoria Solutions', 'London, UK', '197K Records'],
         runtime: 'Oct 2025',
         palette: ocean,
       },
@@ -548,7 +626,7 @@ export const seasons: Season[] = [
     number: 4,
     title: 'The Flagship Originals',
     period: '2025 – 2026',
-    synopsis: 'Deploying high-performance machine learning models, predictive time-series forecasting, and logistics analytics.',
+    synopsis: 'Deploying high-performance machine learning models, predictive time-series forecasting, Uber Power BI dashboards, and fraud detection.',
     episodes: [
       {
         code: 'S04 E01',
@@ -560,14 +638,22 @@ export const seasons: Season[] = [
       },
       {
         code: 'S04 E02',
-        title: 'Operational Precision',
-        description: 'Analyzed Deliveroo operational delivery KPIs, uncovering routing bottlenecks and courier latency reductions using SQL and Power BI.',
-        tags: ['Deliveroo Analytics', 'SQL', 'Logistics KPIs'],
-        runtime: '2025',
+        title: 'Uber Trip Intelligence',
+        description: 'Built a 3-page Power BI dashboard on 103,728 Uber bookings ($1.55M booking value) with DAX measure selectors and demand concentration analysis.',
+        tags: ['Uber Power BI', 'DAX Measures', '103K Bookings'],
+        runtime: '2024',
         palette: ocean,
       },
       {
         code: 'S04 E03',
+        title: 'Operational Precision',
+        description: 'Analyzed Deliveroo operational delivery KPIs, uncovering routing bottlenecks and courier latency reductions using SQL and Power BI.',
+        tags: ['Deliveroo Analytics', 'SQL', 'Logistics KPIs'],
+        runtime: '2025',
+        palette: jade,
+      },
+      {
+        code: 'S04 E04',
         title: 'The Deep Forecaster',
         description: 'Trained LSTM recurrent neural networks and econometric ARIMA models to forecast global crude oil benchmark pricing under high volatility.',
         tags: ['Time Series', 'LSTM', 'ARIMA', 'Deep Learning'],
@@ -600,16 +686,15 @@ export const topPicks: TopPick[] = [
   { label: 'Academic high', title: 'MSc Data Science', detail: 'University of Hertfordshire (UK) • Sep 2024 – Sep 2026', palette: violet },
   { label: 'The ML Original', title: '97.32% Accuracy', detail: 'Fake Job Detection with LightGBM & NLP (0.793 PR-AUC)', palette: crimson },
   { label: 'Industry recognition', title: 'Certificate of Excellence', detail: 'Victoria Solutions (London, UK) • Retail Analytics', palette: amber },
-  { label: 'Big data pipeline', title: 'PySpark Distributed', detail: 'Amazon Bestsellers Multi-Year Scalable Analysis', palette: ocean },
-  { label: 'Operational analytics', title: 'Deliveroo KPI Suite', detail: 'Logistics delivery cycle optimization with SQL & Power BI', palette: jade },
+  { label: 'Uber BI Suite', title: '103,728 Bookings', detail: '3-Page Power BI Dashboard ($1.55M Value, Dynamic DAX)', palette: ocean },
+  { label: 'Big data pipeline', title: 'PySpark Distributed', detail: 'Amazon Bestsellers Multi-Year Scalable Analysis', palette: jade },
+  { label: 'Operational analytics', title: 'Deliveroo KPI Suite', detail: 'Logistics delivery cycle optimization with SQL & Power BI', palette: ocean },
   { label: 'Deep learning', title: 'LSTM Time Series', detail: 'Crude Oil Price Forecasting with Recurrent Neural Networks', palette: violet },
   { label: 'Leadership', title: 'Student Representative', detail: 'Elected Student Representative Award @ University of Hertfordshire', palette: crimson },
   { label: 'Unsupervised ML', title: 'Anomaly Detection', detail: 'K-Means & DBSCAN Transaction Outlier Isolation', palette: ocean },
-  { label: 'Dual BI mastery', title: 'Power BI + Tableau', detail: 'Executive dashboarding, KPI storytelling & retail analytics', palette: amber },
   { label: 'Current mission', title: 'UK Data Analyst Roles', detail: 'Actively seeking full-time Data Analyst & Data Science positions', palette: jade },
 ];
 
-/** Slides for the "▶ Play Intro" cinematic sequence. */
 export type IntroSlide = { kicker: string; title: string; lines: string[]; chips?: string[] };
 
 export const introSlides: IntroSlide[] = [
@@ -617,27 +702,27 @@ export const introSlides: IntroSlide[] = [
     kicker: 'Education',
     title: 'MSc · Data Science',
     lines: ['University of Hertfordshire, Hatfield, UK', 'September 2024 – September 2026'],
-    chips: ['MSc Candidate', 'Student Representative'],
+    chips: ['MSc Candidate', 'Student Representative Award'],
   },
   {
     kicker: 'Core Stack',
-    title: 'Python & SQL first.',
+    title: 'Python, SQL & Power BI first.',
     lines: ['Python (Pandas, NumPy, Scikit-learn, TensorFlow) · SQL & SQLite', 'Power BI · Tableau · Excel · PySpark · Git'],
     chips: ['Python', 'SQL', 'Power BI', 'Tableau', 'PySpark', 'Scikit-learn'],
   },
   {
     kicker: 'Industry Experience',
     title: 'Victoria Solutions · London',
-    lines: ['Data Analyst Trainee · London, UK · October 2025 – November 2025', 'Awarded Certificate of Excellence for Retail Analytics & Dashboards', 'Former Software Engineer at FOURP Technology Solutions (2 years)'],
+    lines: ['Data Analyst Intern · London, UK · Oct 2025 – Nov 2025', 'Built Excel dashboard on 197,430 Swiggy records tracking INR 53.01M sales', 'Awarded Certificate of Excellence for Retail Analytics & Dashboards'],
   },
   {
     kicker: 'Projects',
     title: 'Flagship Originals',
     lines: [
       'Fake Job Detection — 97.32% accuracy, 0.793 PR-AUC with LightGBM & NLP',
+      'Uber Trip Analysis — 3-page Power BI dashboard on 103,728 bookings ($1.55M value)',
       'Amazon Bestsellers — Distributed big data processing with PySpark',
       'Deliveroo Analytics — SQL & Power BI logistics KPI optimization',
-      'Oil Price Forecasting — Deep Learning LSTM & ARIMA time series models',
     ],
   },
   {
@@ -647,7 +732,7 @@ export const introSlides: IntroSlide[] = [
       'Certificate of Excellence — Victoria Solutions (London, UK)',
       'Student Representative Award — University of Hertfordshire',
       'Excellent Project Award — 360DigiTMG',
-      'Distinction Level Science Award',
+      'Distinction Level Science Exhibition Award',
     ],
   },
   {
@@ -657,8 +742,8 @@ export const introSlides: IntroSlide[] = [
   },
   {
     kicker: 'Current Mission',
-    title: 'Now Seeking',
-    lines: ['Actively interviewing for Data Analyst & Data Science roles in the UK'],
+    title: 'Now Seeking in UK',
+    lines: ['Actively interviewing for Data Analyst & Data Science roles in the United Kingdom'],
   },
 ];
 
@@ -682,7 +767,7 @@ export const viewerProfiles: {
   {
     id: 'recruiter',
     name: 'Recruiter',
-    blurb: 'Resume, education, achievements & skills first',
+    blurb: 'Dedicated Executive Recruiter Dossier with direct access to facts, skills & resume',
     color: '#4cc9ff',
     order: ['story', 'moments', 'skills', 'originals', 'portrait', 'about', 'journey', 'picks'],
   },

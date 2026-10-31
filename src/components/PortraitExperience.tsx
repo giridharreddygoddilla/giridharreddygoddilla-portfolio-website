@@ -1,22 +1,24 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { profile } from '../data/portfolio';
+import { profile, characterAssets } from '../data/portfolio';
 import { useFinePointer } from '../hooks/useMedia';
 import { EASE, SectionHeading } from './fx';
+import { playClick } from '../hooks/useSoundFX';
 
 export default function PortraitExperience() {
   const ref = useRef<HTMLDivElement>(null);
   const fine = useFinePointer();
+  const [artMode, setArtMode] = useState<'anime' | 'photo'>('anime');
 
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
   const px = useSpring(mx, { stiffness: 70, damping: 20 });
   const py = useSpring(my, { stiffness: 70, damping: 20 });
 
-  const rotY = useTransform(px, [-1, 1], [-8, 8]);
-  const rotX = useTransform(py, [-1, 1], [6, -6]);
-  const glowX = useTransform(px, [-1, 1], ['-15%', '15%']);
-  const glowY = useTransform(py, [-1, 1], ['-15%', '15%']);
+  const rotY = useTransform(px, [-1, 1], [-6, 6]);
+  const rotX = useTransform(py, [-1, 1], [5, -5]);
+  const glowX = useTransform(px, [-1, 1], ['-12%', '12%']);
+  const glowY = useTransform(py, [-1, 1], ['-12%', '12%']);
 
   return (
     <div className="relative overflow-hidden py-12 md:py-20" ref={ref}>
@@ -73,7 +75,7 @@ export default function PortraitExperience() {
                 href={profile.links.linkedin}
                 target="_blank"
                 rel="noreferrer"
-                className="glass inline-flex items-center gap-2 rounded-lg px-5 py-3 text-sm font-semibold text-bone hover:bg-white/15"
+                className="glass inline-flex items-center gap-2 rounded-lg px-5 py-3 text-sm font-semibold text-bone hover:bg-white/15 cursor-pointer"
               >
                 <span>Connect on LinkedIn</span> ↗
               </a>
@@ -81,7 +83,7 @@ export default function PortraitExperience() {
                 href={profile.links.github}
                 target="_blank"
                 rel="noreferrer"
-                className="glass inline-flex items-center gap-2 rounded-lg px-5 py-3 text-sm font-semibold text-mist hover:text-bone hover:bg-white/15"
+                className="glass inline-flex items-center gap-2 rounded-lg px-5 py-3 text-sm font-semibold text-mist hover:text-bone hover:bg-white/15 cursor-pointer"
               >
                 <span>Explore GitHub</span> ↗
               </a>
@@ -89,7 +91,7 @@ export default function PortraitExperience() {
           </motion.div>
         </div>
 
-        {/* Right Column: 3D Cinematic Portrait Experience */}
+        {/* Right Column: 3D Cinematic Portrait Experience with Art/Photo Switcher */}
         <div
           className="order-1 flex justify-center lg:order-2 lg:col-span-6"
           onPointerMove={(e) => {
@@ -105,48 +107,84 @@ export default function PortraitExperience() {
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 1.2, ease: EASE }}
+            transition={{ duration: 1.1, ease: EASE }}
           >
             {/* Atmospheric Background Glow */}
             <motion.div
               aria-hidden
-              className="absolute -inset-4 rounded-3xl opacity-70 blur-3xl"
+              className="absolute -inset-4 rounded-3xl opacity-70 blur-3xl pointer-events-none"
               style={{
                 x: glowX,
                 y: glowY,
-                background: 'radial-gradient(circle at 50% 40%, rgba(229,9,32,0.4), rgba(214,173,98,0.2) 50%, transparent 75%)',
+                background: 'radial-gradient(circle at 50% 40%, rgba(229,9,32,0.35), rgba(214,173,98,0.18) 50%, transparent 75%)',
               }}
             />
 
             {/* Cinematic Frame */}
             <div className="relative h-full w-full overflow-hidden rounded-2xl border border-white/15 bg-gradient-to-b from-ink-3 via-ink-2 to-ink shadow-[0_20px_80px_rgba(0,0,0,0.8)]">
-              {/* Subtle grid texture */}
-              <div aria-hidden className="absolute inset-0 opacity-15 [background-image:linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] [background-size:24px_24px]" />
+              {/* Top controls: metadata badge and switcher */}
+              <div className="absolute left-4 top-4 right-4 z-30 flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2 rounded-full border border-white/15 bg-ink/80 px-3 py-1 backdrop-blur-md">
+                  <span className="h-2 w-2 animate-pulse rounded-full bg-crimson" />
+                  <span className="font-sans text-[10px] font-bold tracking-widest text-bone uppercase">
+                    MASTER RECORD
+                  </span>
+                </div>
 
-              {/* Top metadata badge */}
-              <div className="absolute left-5 top-5 z-20 flex items-center gap-2 rounded-full border border-white/15 bg-ink/80 px-3 py-1 backdrop-blur-md">
-                <span className="h-2 w-2 animate-pulse rounded-full bg-crimson" />
-                <span className="font-sans text-[10px] font-bold tracking-widest text-bone uppercase">
-                  MASTER RECORD • UK
-                </span>
+                <div className="flex items-center gap-1 p-0.5 rounded-full bg-ink/85 backdrop-blur-md border border-white/15">
+                  <button
+                    onClick={() => {
+                      playClick();
+                      setArtMode('anime');
+                    }}
+                    className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold transition cursor-pointer ${
+                      artMode === 'anime' ? 'bg-[#E50920] text-white shadow' : 'text-mist hover:text-white'
+                    }`}
+                  >
+                    🎨 Anime
+                  </button>
+                  <button
+                    onClick={() => {
+                      playClick();
+                      setArtMode('photo');
+                    }}
+                    className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold transition cursor-pointer ${
+                      artMode === 'photo' ? 'bg-[#38bdf8] text-[#08090D] font-bold shadow' : 'text-mist hover:text-white'
+                    }`}
+                  >
+                    📸 Real
+                  </button>
+                </div>
               </div>
 
-              {/* The Actual Portrait Photograph */}
-              <motion.img
-                src="/assets/portrait-720.webp"
-                srcSet="/assets/portrait-420.webp 420w, /assets/portrait-720.webp 720w, /assets/portrait-1100.webp 1100w"
-                sizes="(max-width: 640px) 380px, 480px"
-                alt="Giridhar Reddy Goddilla"
-                className="absolute inset-x-0 bottom-0 mx-auto h-[105%] w-auto max-w-none object-contain object-bottom drop-shadow-[0_25px_50px_rgba(0,0,0,0.9)] [mask-image:linear-gradient(to_bottom,black_75%,transparent_99%)]"
-                initial={{ filter: 'brightness(0.7) blur(8px)', scale: 1.05 }}
-                whileInView={{ filter: 'brightness(1) blur(0px)', scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 1.4, ease: EASE }}
-              />
+              {/* The Image Display */}
+              {artMode === 'anime' ? (
+                /* Confident Arms-Crossed Anime Portrait */
+                <motion.img
+                  key="anime-portrait"
+                  src={characterAssets.confident.src}
+                  alt={characterAssets.confident.alt}
+                  className="w-full h-full object-cover object-top"
+                  animate={{ scale: [1, 1.03, 1] }}
+                  transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
+                />
+              ) : (
+                /* Authentic Real Photo Cutout */
+                <motion.img
+                  key="real-portrait"
+                  src="/assets/portrait-720.webp"
+                  srcSet="/assets/portrait-420.webp 420w, /assets/portrait-720.webp 720w, /assets/portrait-1100.webp 1100w"
+                  sizes="(max-width: 640px) 380px, 480px"
+                  alt="Giridhar Reddy Goddilla"
+                  className="absolute inset-x-0 bottom-0 mx-auto h-[105%] w-auto max-w-none object-contain object-bottom drop-shadow-[0_25px_50px_rgba(0,0,0,0.9)] [mask-image:linear-gradient(to_bottom,black_75%,transparent_99%)]"
+                  initial={{ filter: 'brightness(0.7) blur(8px)', scale: 1.05 }}
+                  animate={{ filter: 'brightness(1) blur(0px)', scale: 1 }}
+                  transition={{ duration: 0.8, ease: EASE }}
+                />
+              )}
 
               {/* Ambient lighting overlays */}
               <div aria-hidden className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink via-transparent to-transparent opacity-80" />
-              <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(229,9,32,0.22),transparent_60%)]" />
 
               {/* Bottom Card Ribbon */}
               <div className="absolute inset-x-0 bottom-0 z-20 border-t border-white/10 bg-ink-2/90 p-5 backdrop-blur-md">

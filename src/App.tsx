@@ -17,8 +17,10 @@ import TopPicks from './components/TopPicks';
 import Skills from './components/Skills';
 import Achievements from './components/Achievements';
 import ResumeSection from './components/ResumeViewer';
+import RecruiterDossier from './components/RecruiterDossier';
 import FinalCTA from './components/FinalCTA';
 import { EASE } from './components/fx';
+import { playClick } from './hooks/useSoundFX';
 
 // Overlays are only loaded on demand
 const PlayIntro = lazy(() => import('./components/PlayIntro'));
@@ -78,12 +80,25 @@ function Series() {
         setStage('home');
       } else {
         const p = viewerProfiles.find((v) => v.id === id) ?? viewerProfiles[0];
-        setToast(`Now watching as ${p.name} — ${p.blurb.toLowerCase()}`);
+        setToast(`Viewing as ${p.name} — ${p.blurb}`);
         scrollTo(0, { offset: 0 });
       }
     },
     [stage, scrollTo],
   );
+
+  // Keyboard shortcut: Press 'r' to toggle Recruiter mode
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if (e.key === 'r' || e.key === 'R') {
+        playClick();
+        pickProfile(profileId === 'recruiter' ? 'giridhar' : 'recruiter');
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [profileId, pickProfile]);
 
   useEffect(() => {
     if (!toast) return;
@@ -117,24 +132,50 @@ function Series() {
       </AnimatePresence>
 
       {stage === 'home' && (
-        <motion.div initial={{ opacity: 0, scale: 1.03, filter: 'blur(10px)' }} animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }} transition={{ duration: 1, ease: EASE }}>
+        <motion.div
+          initial={{ opacity: 0, scale: 1.02, filter: 'blur(8px)' }}
+          animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+          transition={{ duration: 0.8, ease: EASE }}
+        >
           <Navbar order={order} profileId={profileId} onSwitch={pickProfile} />
-          <main>
-            <Hero key={`hero-${profileId}`} onPlay={() => setPlaying(true)} onResume={() => setResumeOpen(true)} profileId={profileId} />
-            <ContinueWatching order={order} />
-            {order.map((id) => (
-              <Scene key={id} id={id} className={id === 'originals' ? '!py-0 sm:!py-0' : ''}>
-                {sections[id]}
-              </Scene>
-            ))}
-            <FinalCTA onReplay={() => setStage('opening')} />
-          </main>
+
+          {profileId === 'recruiter' ? (
+            /* Dedicated High-Density Recruiter Dossier Experience */
+            <RecruiterDossier
+              onSelectProject={setProject}
+              onOpenResumeModal={() => setResumeOpen(true)}
+              onSwitchToCinematic={() => pickProfile('giridhar')}
+            />
+          ) : (
+            /* Full Cinematic Narrative Series */
+            <main>
+              <Hero
+                key={`hero-${profileId}`}
+                onPlay={() => setPlaying(true)}
+                onResume={() => setResumeOpen(true)}
+                profileId={profileId}
+                onSwitchToRecruiter={() => pickProfile('recruiter')}
+              />
+              <ContinueWatching order={order} />
+              {order.map((id) => (
+                <Scene key={id} id={id} className={id === 'originals' ? '!py-0 sm:!py-0' : ''}>
+                  {sections[id]}
+                </Scene>
+              ))}
+              <FinalCTA
+                onReplay={() => setStage('opening')}
+                onSwitchToRecruiter={() => pickProfile('recruiter')}
+              />
+            </main>
+          )}
         </motion.div>
       )}
 
       <Suspense fallback={null}>
         <AnimatePresence>{playing && <PlayIntro key="intro" onClose={closeIntro} />}</AnimatePresence>
-        <AnimatePresence>{project && <ProjectModal key="project" project={project} onClose={closeProject} onSwitch={setProject} />}</AnimatePresence>
+        <AnimatePresence>
+          {project && <ProjectModal key="project" project={project} onClose={closeProject} onSwitch={setProject} />}
+        </AnimatePresence>
         <AnimatePresence>{resumeOpen && <ResumeModal key="resume" onClose={closeResume} />}</AnimatePresence>
       </Suspense>
 
@@ -142,7 +183,7 @@ function Series() {
         {toast && (
           <motion.div
             role="status"
-            className="glass fixed bottom-6 left-1/2 z-[150] w-[min(92vw,420px)] -translate-x-1/2 rounded-xl px-5 py-3 text-center text-sm text-bone shadow-2xl"
+            className="glass fixed bottom-6 left-1/2 z-[150] w-[min(92vw,420px)] -translate-x-1/2 rounded-xl px-5 py-3 text-center text-xs sm:text-sm text-bone shadow-2xl border border-white/15"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 30 }}
