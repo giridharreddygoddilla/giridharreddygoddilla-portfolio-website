@@ -12,6 +12,9 @@ interface NavbarProps {
   onOpenHelp: () => void;
   sound: boolean;
   onToggleSound: () => void;
+  onOpenLockManager?: () => void;
+  onOpenIntro?: () => void;
+  onOpenProfileChooser?: () => void;
 }
 
 export default function Navbar({
@@ -21,6 +24,9 @@ export default function Navbar({
   onOpenHelp,
   sound,
   onToggleSound,
+  onOpenLockManager,
+  onOpenIntro,
+  onOpenProfileChooser,
 }: NavbarProps) {
   const { scrollY } = useScroll();
   const [solid, setSolid] = useState(false);
@@ -58,12 +64,16 @@ export default function Navbar({
             onOpenHelp={onOpenHelp}
             isSoundOn={sound}
             onToggleSound={onToggleSound}
+            onOpenLockManager={onOpenLockManager}
+            onOpenIntro={onOpenIntro}
+            onOpenProfileChooser={onOpenProfileChooser}
           />
 
           {/* Persistent Page Switcher (Matching User Reference: Character Thumbnail + Gold Border + ▼) */}
           <PersistentPageSwitcher
             activePage={activePage}
             onSelectPage={(p) => onNavigate(p)}
+            onOpenProfileChooser={onOpenProfileChooser}
           />
 
           {/* Series Mark Brand link */}

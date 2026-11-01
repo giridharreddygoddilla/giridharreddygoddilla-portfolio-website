@@ -7,6 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
+    "typecheck": "tsc -b",
+    "test": "node scripts/test-runner.mjs",
+    "audit": "node scripts/audit-new-features.mjs",
     "images": "node scripts/build-images.mjs"
   },
   "dependencies": {

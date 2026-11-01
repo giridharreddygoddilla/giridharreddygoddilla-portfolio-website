@@ -113,6 +113,24 @@ npm run preview
 ```
 The optimized static production bundle will be generated in `dist/`.
 
+### Testing & Quality Assurance
+```bash
+npm test         # Runs automated 16-point verification suite
+npm run typecheck # Strict TypeScript compilation check (tsc -b)
+npm run audit    # Headless Chrome CDP visual & console error audit
+```
+
+### Profile Lock Manager & Supabase Integration
+- Built-in client cryptographic gate (Web Crypto PBKDF2 with SHA-256 and rate-limiting) accessible from the Hamburger Menu (`PROFILE LOCK MANAGER`).
+- For full server-side Row Level Security (RLS) on Supabase, apply the SQL schema in:
+  `supabase/migrations/20261101_profile_locks.sql`
+
+### University Images
+To update university logos or photos:
+- Master's (University of Hertfordshire): place asset at `public/assets/education/hertfordshire.webp` (or png/jpg).
+- Bachelor's (Lovely Professional University): place asset at `public/assets/education/lpu.webp` (or png/jpg).
+- Graceful dignified academic monograms (`UH` and `LPU`) are automatically displayed when images are not yet provided.
+
 ---
 
 ## 🌐 Deployment

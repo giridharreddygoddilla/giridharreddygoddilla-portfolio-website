@@ -14,7 +14,13 @@ if (!fs.existsSync(outDir)) {
   fs.mkdirSync(outDir, { recursive: true });
 }
 
-const chromePath = 'C:/Users/girid/AppData/Local/ms-playwright/chromium-1248/chrome-win64/chrome.exe';
+import { getChromePath } from './find-chrome.mjs';
+
+const chromePath = getChromePath();
+if (!chromePath) {
+  console.error('No supported Chrome or Chromium binary found. Set CHROME_PATH environment variable.');
+  process.exit(1);
+}
 
 function sleep(ms) {
   return new Promise(r => setTimeout(r, ms));

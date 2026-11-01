@@ -81,6 +81,8 @@ export const education = [
     period: 'Sep 2024 – Sep 2026',
     score: 'MSc Candidate (In Progress)',
     coursework: 'Data Science, Data Analytics, Machine Learning, Statistical Modelling, Deep Learning, NLP, CNNs and LSTMs',
+    logo: '/assets/education/hertfordshire.webp',
+    shortCode: 'UH',
   },
   {
     school: 'Lovely Professional University',
@@ -89,6 +91,8 @@ export const education = [
     period: 'Aug 2019 – Aug 2023',
     score: 'First Class Degree',
     coursework: 'Data Structures and Algorithms, OOP with Python, DBMS, SQL, Data Science Foundations, Power BI and Tableau',
+    logo: '/assets/education/lpu.webp',
+    shortCode: 'LPU',
   },
 ];
 
@@ -175,7 +179,7 @@ export const projects: Project[] = [
       { value: '4.8%', label: 'fraud class baseline' },
       { value: '4', label: 'models evaluated' },
     ],
-    github: 'https://github.com/giridharreddygoddilla',
+    github: 'https://github.com/giridharreddygoddilla/MSc-Data-Science-Project',
     palette: { from: '#2a0610', via: '#7a0f24', to: '#0b0710', accent: '#ff3d5a' },
     motif: 'shield',
   },
@@ -206,7 +210,7 @@ export const projects: Project[] = [
       { value: '3-Page', label: 'interactive Power BI dashboard' },
       { value: '37%', label: 'UberX booking share' },
     ],
-    github: 'https://github.com/giridharreddygoddilla',
+    github: 'https://github.com/giridharreddygoddilla/USA-Uber-Data-Analysis',
     palette: { from: '#051824', via: '#0c4a6e', to: '#020d14', accent: '#38bdf8' },
     motif: 'tenants',
   },

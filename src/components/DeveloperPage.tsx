@@ -266,7 +266,7 @@ RETURN
 
             <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between">
               <a
-                href={profile.links.github}
+                href={projects.find((p) => p.id === 'fake-job-detection')?.github || 'https://github.com/giridharreddygoddilla/MSc-Data-Science-Project'}
                 target="_blank"
                 rel="noreferrer"
                 className="text-xs font-mono text-[#46e3a8] hover:underline flex items-center gap-1"

@@ -17,6 +17,35 @@ interface RecruiterDossierProps {
   onSwitchToCinematic: () => void;
 }
 
+function UniversityLogo({
+  logo,
+  shortCode,
+  school,
+}: {
+  logo?: string;
+  shortCode?: string;
+  school: string;
+}) {
+  const [imgFailed, setImgFailed] = useState(false);
+
+  if (logo && !imgFailed) {
+    return (
+      <img
+        src={logo}
+        alt={`${school} logo`}
+        onError={() => setImgFailed(true)}
+        className="w-full h-full object-contain"
+      />
+    );
+  }
+
+  return (
+    <span className="font-mono text-xs sm:text-sm font-bold tracking-wider text-[#D6AD62] bg-[#D6AD62]/10 border border-[#D6AD62]/20 w-full h-full rounded-lg flex items-center justify-center">
+      {shortCode || school.split(' ').map((w) => w[0]).join('').slice(0, 3)}
+    </span>
+  );
+}
+
 export default function RecruiterDossier({
   onSelectProject,
   onOpenResumeModal,
@@ -35,23 +64,24 @@ export default function RecruiterDossier({
   return (
     <main className="relative min-h-screen bg-[#08090D] text-[#F5F5F5] pt-24 pb-28">
       {/* Top sticky sub-banner for recruiter mode */}
-      <div className="sticky top-16 z-30 border-b border-white/10 bg-[#11131A]/90 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs">
+      <div className="sticky top-16 md:top-[70px] z-40 border-b border-white/10 bg-[#11131A]/95 backdrop-blur-md shadow-lg shadow-black/40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 sm:gap-3 text-xs">
           <div className="flex items-center gap-2">
             <span className="flex h-2 w-2 rounded-full bg-[#38bdf8] animate-pulse" />
             <span className="font-mono uppercase tracking-widest text-[#38bdf8] font-bold">
               Recruiter Mode Active
             </span>
-            <span className="text-[#A3A6B0] hidden sm:inline">|</span>
-            <span className="text-[#A3A6B0] hidden sm:inline">
+            <span className="text-[#A3A6B0] hidden md:inline">|</span>
+            <span className="text-[#A3A6B0] hidden md:inline">
               High-density executive dossier for hiring managers
             </span>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5 w-full sm:w-auto justify-between sm:justify-end">
             <button
+              type="button"
               onClick={onSwitchToCinematic}
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 text-white font-medium transition cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 text-white font-medium transition cursor-pointer text-[11px] sm:text-xs"
             >
               <span>🎬</span>
               <span>Switch to Cinematic Series</span>
@@ -59,7 +89,7 @@ export default function RecruiterDossier({
             <a
               href={profile.resumePdf}
               download="Giridhar_Reddy_Goddilla_Resume.pdf"
-              className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#E50920] hover:bg-[#ff2438] text-white font-semibold transition cursor-pointer shadow-md shadow-[#E50920]/25"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#E50920] hover:bg-[#ff2438] text-white font-semibold transition cursor-pointer shadow-md shadow-[#E50920]/25 text-[11px] sm:text-xs shrink-0"
             >
               <span>↓</span>
               <span>Download Resume PDF</span>
@@ -474,20 +504,31 @@ export default function RecruiterDossier({
                   {education.map((edu, idx) => (
                     <div
                       key={idx}
-                      className="rounded-xl border border-white/10 bg-[#181B24]/70 p-5 shadow"
+                      className="rounded-2xl border border-white/10 bg-[#181B24]/70 p-5 shadow-lg transition hover:border-white/20"
                     >
-                      <div className="flex items-start justify-between gap-2">
-                        <div>
-                          <h3 className="text-base font-bold text-white">{edu.degree}</h3>
-                          <div className="text-sm text-[#38bdf8] font-medium">{edu.school}</div>
-                          <div className="text-xs text-[#A3A6B0] mt-0.5">{edu.place}</div>
+                      <div className="flex items-start gap-4">
+                        {/* Compact University Logo Slot with Graceful Fallback */}
+                        <div className="relative h-12 w-12 sm:h-14 sm:w-14 rounded-xl border border-white/10 bg-[#11131A] p-1.5 flex items-center justify-center shrink-0 overflow-hidden shadow-inner">
+                          <UniversityLogo
+                            logo={(edu as any).logo}
+                            shortCode={(edu as any).shortCode}
+                            school={edu.school}
+                          />
                         </div>
-                        <span className="px-2.5 py-1 rounded bg-white/5 font-mono text-xs text-[#D6AD62] whitespace-nowrap">
-                          {edu.period}
-                        </span>
+
+                        <div className="flex-1 min-w-0">
+                          <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
+                            <h3 className="text-base font-bold text-white leading-snug">{edu.degree}</h3>
+                            <span className="px-2.5 py-0.5 rounded bg-white/5 font-mono text-xs text-[#D6AD62] whitespace-nowrap self-start">
+                              {edu.period}
+                            </span>
+                          </div>
+                          <div className="text-sm text-[#38bdf8] font-semibold mt-0.5">{edu.school}</div>
+                          <div className="text-xs text-[#A3A6B0] mt-0.5">{edu.place} • <span className="text-white/80">{edu.score}</span></div>
+                        </div>
                       </div>
 
-                      <div className="mt-3 text-xs text-white/80 leading-relaxed border-t border-white/5 pt-3">
+                      <div className="mt-3.5 text-xs text-white/80 leading-relaxed border-t border-white/5 pt-3">
                         <strong className="text-white/50 font-mono uppercase text-[10px] block mb-1">
                           Key Coursework
                         </strong>

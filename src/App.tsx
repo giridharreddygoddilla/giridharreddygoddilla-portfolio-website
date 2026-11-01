@@ -21,9 +21,12 @@ import RecruiterDossier from './components/RecruiterDossier';
 import CreativePage from './components/CreativePage';
 import DeveloperPage from './components/DeveloperPage';
 import NavigationGuideModal from './components/NavigationGuideModal';
+import PasswordGateModal from './components/PasswordGateModal';
+import ProfileLockManagerModal from './components/ProfileLockManagerModal';
 import FinalCTA from './components/FinalCTA';
 import { EASE } from './components/fx';
 import { isSoundEnabled, playClick, setSoundEnabled } from './hooks/useSoundFX';
+import { isProfileSessionUnlocked } from './services/lockManager';
 
 // Overlays are loaded on demand
 const PlayIntro = lazy(() => import('./components/PlayIntro'));
@@ -33,15 +36,6 @@ const ResumeModal = lazy(() => import('./components/ResumeModal'));
 type Stage = 'opening' | 'profiles' | 'home';
 
 const STORAGE_KEY = 'giridhar-series-profile';
-
-function readStoredProfile(): ProfileId | null {
-  try {
-    const v = sessionStorage.getItem(STORAGE_KEY);
-    return viewerProfiles.some((p) => p.id === v) ? (v as ProfileId) : null;
-  } catch {
-    return null;
-  }
-}
 
 function profileToPage(profileId: ProfileId): PageId {
   if (profileId === 'recruiter') return 'recruiter';
@@ -57,6 +51,31 @@ function pageToProfile(pageId: PageId): ProfileId {
   return 'giridhar';
 }
 
+function getInitialStage(): Stage {
+  try {
+    const hash = window.location.hash.replace('#', '');
+    if (['series', 'home', 'recruiter', 'developer', 'creative'].includes(hash)) {
+      return 'home';
+    }
+  } catch {
+    /* window unavailable */
+  }
+  // Root URL immediately displays the four-profile selection screen
+  return 'profiles';
+}
+
+function getInitialProfile(): ProfileId {
+  try {
+    const hash = window.location.hash.replace('#', '');
+    if (hash === 'recruiter') return 'recruiter';
+    if (hash === 'developer') return 'developer';
+    if (hash === 'creative') return 'creative';
+  } catch {
+    /* window unavailable */
+  }
+  return 'giridhar';
+}
+
 export default function App() {
   return (
     <SmoothScrollProvider>
@@ -66,15 +85,16 @@ export default function App() {
 }
 
 function Series() {
-  const stored = readStoredProfile();
-  const [stage, setStage] = useState<Stage>(stored ? 'home' : 'opening');
-  const [profileId, setProfileId] = useState<ProfileId>(stored ?? 'giridhar');
-  const [activePage, setActivePage] = useState<PageId>(stored ? profileToPage(stored) : 'home');
+  const [stage, setStage] = useState<Stage>(getInitialStage);
+  const [profileId, setProfileId] = useState<ProfileId>(getInitialProfile);
+  const [activePage, setActivePage] = useState<PageId>(profileToPage(getInitialProfile()));
 
   const [playing, setPlaying] = useState(false);
   const [project, setProject] = useState<Project | null>(null);
   const [resumeOpen, setResumeOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
+  const [lockManagerOpen, setLockManagerOpen] = useState(false);
+  const [pendingLockedProfile, setPendingLockedProfile] = useState<ProfileId | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const [sound, setSound] = useState(isSoundEnabled());
 
@@ -96,64 +116,126 @@ function Series() {
     if (next) playClick();
   }, [sound]);
 
-  // Navigate between the 4 primary experiences
-  const handleNavigate = useCallback((page: PageId, targetId?: string) => {
-    setActivePage(page);
-    const pId = pageToProfile(page);
-    setProfileId(pId);
-    try {
-      sessionStorage.setItem(STORAGE_KEY, pId);
-    } catch {
-      /* storage unavailable */
-    }
+  // Navigate between the 4 primary experiences with history support
+  const handleNavigate = useCallback(
+    (page: PageId, targetId?: string, pushHistory = true) => {
+      const pId = pageToProfile(page);
 
-    if (page === 'home' && targetId) {
-      setTimeout(() => {
-        const el = document.getElementById(targetId);
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 100);
-    } else {
-      window.scrollTo({ top: 0, behavior: 'instant' });
-    }
-  }, []);
-
-  const pickProfile = useCallback(
-    (id: ProfileId) => {
-      setProfileId(id);
-      const targetPage = profileToPage(id);
-      setActivePage(targetPage);
-      try {
-        sessionStorage.setItem(STORAGE_KEY, id);
-      } catch {
-        /* storage unavailable */
+      // Check if target profile is locked
+      if (!isProfileSessionUnlocked(pId)) {
+        setPendingLockedProfile(pId);
+        return;
       }
+
+      setActivePage(page);
+      setProfileId(pId);
+
+      try {
+        sessionStorage.setItem(STORAGE_KEY, pId);
+        if (pushHistory) {
+          const hash = page === 'home' ? 'series' : page;
+          window.history.pushState({ page, pId }, '', `#${hash}`);
+        }
+      } catch {
+        /* storage/history unavailable */
+      }
+
       if (stage !== 'home') {
-        window.scrollTo(0, 0);
         setStage('home');
+      }
+
+      if (page === 'home' && targetId) {
+        setTimeout(() => {
+          const el = document.getElementById(targetId);
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 100);
       } else {
-        const p = viewerProfiles.find((v) => v.id === id) ?? viewerProfiles[0];
-        setToast(`Viewing as ${p.name} — ${p.blurb}`);
         window.scrollTo({ top: 0, behavior: 'instant' });
       }
     },
     [stage],
   );
 
+  // Profile picker with lock check
+  const attemptPickProfile = useCallback(
+    (id: ProfileId) => {
+      if (!isProfileSessionUnlocked(id)) {
+        setPendingLockedProfile(id);
+        return;
+      }
+
+      setProfileId(id);
+      const targetPage = profileToPage(id);
+      setActivePage(targetPage);
+
+      try {
+        sessionStorage.setItem(STORAGE_KEY, id);
+        const hash = targetPage === 'home' ? 'series' : targetPage;
+        window.history.pushState({ page: targetPage, id }, '', `#${hash}`);
+      } catch {
+        /* storage unavailable */
+      }
+
+      window.scrollTo(0, 0);
+      setStage('home');
+    },
+    [],
+  );
+
+  // Return to Profile Chooser
+  const openProfileChooser = useCallback(() => {
+    try {
+      window.history.pushState({ stage: 'profiles' }, '', '#profiles');
+    } catch {
+      /* history unavailable */
+    }
+    window.scrollTo(0, 0);
+    setStage('profiles');
+  }, []);
+
+  // Listen to browser Back / Forward buttons (popstate)
+  useEffect(() => {
+    const handlePopState = () => {
+      const hash = window.location.hash.replace('#', '');
+      if (!hash || hash === 'profiles') {
+        setStage('profiles');
+      } else if (['series', 'home', 'recruiter', 'developer', 'creative'].includes(hash)) {
+        const targetPage: PageId =
+          hash === 'recruiter'
+            ? 'recruiter'
+            : hash === 'developer'
+            ? 'developer'
+            : hash === 'creative'
+            ? 'creative'
+            : 'home';
+        handleNavigate(targetPage, undefined, false);
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [handleNavigate]);
+
   // Global physical keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      // Never intercept keystrokes with modifier keys (Ctrl+C, Cmd+C, Ctrl+V, etc.)
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement ||
+        (e.target as HTMLElement)?.isContentEditable
+      ) {
+        return;
+      }
+
       if (e.key === 'r' || e.key === 'R') {
         playClick();
         handleNavigate('recruiter');
       } else if (e.key === 'd' || e.key === 'D') {
         playClick();
         handleNavigate('developer');
-      } else if (e.key === 'c' || e.key === 'C') {
-        playClick();
-        handleNavigate('creative');
       } else if (e.key === 'h' || e.key === 'H') {
         playClick();
         handleNavigate('home');
@@ -194,11 +276,26 @@ function Series() {
     <LayoutGroup>
       <div className="grain" aria-hidden />
 
+      {/* Opening sequence is optional; can be triggered explicitly via Watch Intro */}
       <AnimatePresence>
-        {stage === 'opening' && <OpeningSequence key="opening" onDone={() => setStage('profiles')} />}
-        {stage === 'profiles' && <ProfileSelector key="profiles" onPick={pickProfile} />}
+        {stage === 'opening' && (
+          <OpeningSequence key="opening" onDone={() => setStage('profiles')} />
+        )}
       </AnimatePresence>
 
+      {/* Root First Screen: All Four Profiles Screen */}
+      <AnimatePresence>
+        {stage === 'profiles' && (
+          <ProfileSelector
+            key="profiles"
+            onPick={attemptPickProfile}
+            onWatchIntro={() => setStage('opening')}
+            onOpenLockManager={() => setLockManagerOpen(true)}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Main Experience View */}
       {stage === 'home' && (
         <motion.div
           initial={{ opacity: 0, scale: 1.02, filter: 'blur(8px)' }}
@@ -213,6 +310,9 @@ function Series() {
             onOpenHelp={() => setHelpOpen(true)}
             sound={sound}
             onToggleSound={toggleSound}
+            onOpenLockManager={() => setLockManagerOpen(true)}
+            onOpenIntro={() => setStage('opening')}
+            onOpenProfileChooser={openProfileChooser}
           />
 
           {/* Page 1: Cinematic Series Home */}
@@ -266,6 +366,28 @@ function Series() {
           )}
         </motion.div>
       )}
+
+      {/* Visitor Password Gate for Locked Profiles */}
+      <PasswordGateModal
+        profileId={pendingLockedProfile}
+        onSuccess={(unlockedId) => {
+          setPendingLockedProfile(null);
+          attemptPickProfile(unlockedId);
+        }}
+        onCancel={() => {
+          setPendingLockedProfile(null);
+        }}
+      />
+
+      {/* Owner Profile Lock Manager Modal */}
+      <ProfileLockManagerModal
+        isOpen={lockManagerOpen}
+        onClose={() => setLockManagerOpen(false)}
+        onLockStateChange={() => {
+          // Trigger re-render to reflect updated lock badges
+          setToast('Lock configuration saved successfully.');
+        }}
+      />
 
       {/* Overlays and Modals */}
       <Suspense fallback={null}>

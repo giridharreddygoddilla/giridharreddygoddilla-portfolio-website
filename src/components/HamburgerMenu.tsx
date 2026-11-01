@@ -12,6 +12,9 @@ interface HamburgerMenuProps {
   onOpenHelp: () => void;
   isSoundOn: boolean;
   onToggleSound: () => void;
+  onOpenLockManager?: () => void;
+  onOpenIntro?: () => void;
+  onOpenProfileChooser?: () => void;
 }
 
 export default function HamburgerMenu({
@@ -22,6 +25,9 @@ export default function HamburgerMenu({
   onOpenHelp,
   isSoundOn,
   onToggleSound,
+  onOpenLockManager,
+  onOpenIntro,
+  onOpenProfileChooser,
 }: HamburgerMenuProps) {
   // Close on Escape key
   useEffect(() => {
@@ -207,8 +213,64 @@ export default function HamburgerMenu({
                 {/* System Controls */}
                 <div className="pt-4 mt-4 border-t border-white/5 space-y-1.5">
                   <span className="text-[10px] font-mono uppercase tracking-wider text-white/40 block mb-2 px-2 font-bold">
-                    CONTROLS & HELP
+                    CONTROLS &amp; EXPERIENCES
                   </span>
+
+                  {onOpenProfileChooser && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        playClick();
+                        onOpenProfileChooser();
+                        onToggle();
+                      }}
+                      className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-xs font-medium text-white/70 hover:text-white hover:bg-white/5 transition cursor-pointer"
+                    >
+                      <span className="flex items-center gap-2">
+                        <span>👥</span>
+                        <span>All 4 Profiles (Chooser)</span>
+                      </span>
+                      <span className="text-[10px] font-mono text-[#D6AD62]">Entry</span>
+                    </button>
+                  )}
+
+                  {onOpenIntro && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        playClick();
+                        onOpenIntro();
+                        onToggle();
+                      }}
+                      className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-xs font-medium text-white/70 hover:text-white hover:bg-white/5 transition cursor-pointer"
+                    >
+                      <span className="flex items-center gap-2">
+                        <span>🎬</span>
+                        <span>Watch Cinematic Intro</span>
+                      </span>
+                      <span className="text-[10px] font-mono text-[#E50920]">Optional</span>
+                    </button>
+                  )}
+
+                  {onOpenLockManager && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        playClick();
+                        onOpenLockManager();
+                        onToggle();
+                      }}
+                      className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-xs font-medium text-white/90 hover:text-white bg-[#E50920]/10 hover:bg-[#E50920]/20 border border-[#E50920]/30 transition cursor-pointer"
+                    >
+                      <span className="flex items-center gap-2">
+                        <span>🔐</span>
+                        <span className="font-semibold text-white">PROFILE LOCK MANAGER</span>
+                      </span>
+                      <span className="font-mono text-[9px] px-1.5 py-0.5 rounded bg-[#E50920] text-white font-bold">
+                        OWNER
+                      </span>
+                    </button>
+                  )}
 
                   <button
                     type="button"

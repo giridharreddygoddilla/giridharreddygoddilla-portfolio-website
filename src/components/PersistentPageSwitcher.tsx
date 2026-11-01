@@ -2,17 +2,20 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { characterAssets } from '../data/portfolio';
 import { playClick } from '../hooks/useSoundFX';
+import { getProfileLockState } from '../services/lockManager';
 
 export type PageId = 'home' | 'creative' | 'developer' | 'recruiter';
 
 interface PersistentPageSwitcherProps {
   activePage: PageId;
   onSelectPage: (page: PageId) => void;
+  onOpenProfileChooser?: () => void;
 }
 
 export default function PersistentPageSwitcher({
   activePage,
   onSelectPage,
+  onOpenProfileChooser,
 }: PersistentPageSwitcherProps) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -135,6 +138,8 @@ export default function PersistentPageSwitcher({
             <div className="space-y-1">
               {pages.map((p) => {
                 const isSelected = activePage === p.id;
+                const mappedProfileId = p.id === 'home' ? 'giridhar' : p.id;
+                const lockState = getProfileLockState(mappedProfileId);
                 return (
                   <button
                     key={p.id}
@@ -153,7 +158,14 @@ export default function PersistentPageSwitcher({
                     <span className="text-xl mt-0.5">{p.icon}</span>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-white">{p.name}</span>
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-xs font-bold text-white">{p.name}</span>
+                          {lockState.isLocked && (
+                            <span className="text-[10px]" title="Password protected">
+                              🔒
+                            </span>
+                          )}
+                        </div>
                         <span
                           className="font-mono text-[9px] font-bold px-1.5 py-0.2 rounded"
                           style={{
@@ -172,6 +184,26 @@ export default function PersistentPageSwitcher({
                 );
               })}
             </div>
+
+            {onOpenProfileChooser && (
+              <div className="mt-1.5 pt-1.5 border-t border-white/5">
+                <button
+                  type="button"
+                  onClick={() => {
+                    playClick();
+                    onOpenProfileChooser();
+                    setIsOpen(false);
+                  }}
+                  className="flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-xs text-white/70 hover:text-white hover:bg-white/5 transition"
+                >
+                  <span className="flex items-center gap-2">
+                    <span>👥</span>
+                    <span>All 4 Profiles (Chooser)</span>
+                  </span>
+                  <span className="text-[10px] font-mono text-[#D6AD62]">Switch</span>
+                </button>
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

@@ -24,10 +24,10 @@ export default function NavigationGuideModal({ isOpen, onClose }: NavigationGuid
 
   const shortcuts = [
     { key: 'H', desc: 'Go to Home / The Series' },
-    { key: 'C', desc: 'Go to Creative Page' },
     { key: 'D', desc: 'Go to Developer Workstation' },
     { key: 'R', desc: 'Go to Recruiter Dossier' },
     { key: 'M', desc: 'Toggle Cinematic Sound FX' },
+    { key: '?', desc: 'Open this Navigation Guide' },
     { key: 'Esc', desc: 'Close open dialogs & menus' },
   ];
 

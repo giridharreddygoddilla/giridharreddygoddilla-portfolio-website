@@ -13,7 +13,13 @@ if (!fs.existsSync(outDir)) {
   fs.mkdirSync(outDir, { recursive: true });
 }
 
-const chromePath = 'C:/Users/girid/AppData/Local/ms-playwright/chromium-1248/chrome-win64/chrome.exe';
+import { getChromePath } from './find-chrome.mjs';
+
+const chromePath = getChromePath();
+if (!chromePath) {
+  console.error('No supported Chrome or Chromium binary found. Set CHROME_PATH environment variable.');
+  process.exit(1);
+}
 
 function sleep(ms) {
   return new Promise(r => setTimeout(r, ms));
@@ -129,12 +135,19 @@ async function runAudit() {
     console.log('Connected to Chrome. Waiting for page initial load...');
     await sleep(2000);
 
-    // 1. Skip opening sequence and select default profile
-    console.log('Skipping opening titles via Escape key...');
-    await client.eval(`
-      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    // 1. Verify 4-Profile Chooser is the FIRST screen on root load
+    console.log('Verifying 4-Profile Chooser on initial load...');
+    const initialProfiles = await client.eval(`
+      (() => {
+        const text = document.body.innerText;
+        const hasTitle = text.includes('SELECT YOUR EXPERIENCE');
+        const profiles = ['Giridhar', 'Recruiter', 'Developer / Analyst', 'Creative'];
+        const allPresent = profiles.every(p => text.includes(p));
+        return { hasTitle, allPresent };
+      })()
     `);
-    await sleep(1500);
+    console.log('Root Startup Check (All 4 Profiles immediately visible):', initialProfiles);
+    await client.captureScreenshot('audit_00_four_profiles_startup.png');
 
     console.log('Selecting Giridhar profile...');
     await client.eval(`
