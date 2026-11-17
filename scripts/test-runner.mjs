@@ -135,6 +135,32 @@ assert(
   'University logo component with graceful monogram fallback is rendered in Education'
 );
 
+// TEST 9: Resume Transformation Deliverables & Original Photograph Integration
+console.log('\n9. Checking Resume Deliverables & Recruiter Profile Integration...');
+const assetsDir = path.join(rootDir, 'public', 'assets');
+assert(
+  fs.existsSync(path.join(assetsDir, 'Giridhar_Reddy_Goddilla_Resume_ATS.pdf')),
+  'Version A: ATS-Friendly Resume PDF exists in public/assets/'
+);
+assert(
+  fs.existsSync(path.join(assetsDir, 'Giridhar_Reddy_Goddilla_Resume_Premium.pdf')),
+  'Version B: Premium Visual Resume PDF exists in public/assets/'
+);
+assert(
+  fs.existsSync(path.join(assetsDir, 'Giridhar_Reddy_Goddilla_Resume.docx')),
+  'Editable Word Resume (DOCX) exists in public/assets/'
+);
+assert(
+  fs.existsSync(path.join(assetsDir, 'giridhar-original-portrait.jpg')) &&
+    recruiterTsx.includes('profile.recruiterPhoto.src') &&
+    !recruiterTsx.includes('hero-portrait.webp'),
+  'Recruiter profile uses uploaded original photograph (no AI portrait)'
+);
+assert(
+  portfolioTs.includes('Bank Loan & Credit Risk Analysis') && portfolioTs.includes('14% year-on-year sales increase'),
+  'Portfolio data is synchronised with updated resume projects and impact'
+);
+
 // Final Summary
 console.log('\n======================================================');
 console.log(`TEST RESULTS: ${passedTests} / ${totalTests} PASSED`);

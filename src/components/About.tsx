@@ -4,10 +4,10 @@ import { EASE, SectionHeading, Tilt } from './fx';
 
 export default function About() {
   const facts = [
-    { k: 'Postgraduate', v: 'MSc Data Science', s: `${education[0].school} (UK)` },
+    { k: 'Postgraduate', v: 'MSc Data Science (Distinction)', s: `${education[0].school} (${education[0].place})` },
     { k: 'Industry Track', v: `${experience[0].role}, ${experience[0].company}`, s: `${experience[0].place} · Oct–Nov 2025` },
-    { k: 'Daily Stack', v: 'Python & SQL', s: 'Power BI, Tableau, PySpark, Scikit-learn' },
-    { k: 'Location', v: profile.location, s: 'Eligible to work in UK • Actively Interviewing' },
+    { k: 'Core Stack', v: 'SQL, Python & Power BI', s: 'DAX, Tableau, PySpark, Databricks, Snowflake' },
+    { k: 'Availability', v: profile.location, s: `${profile.visa} • Data Analyst Roles` },
   ];
 
   return (

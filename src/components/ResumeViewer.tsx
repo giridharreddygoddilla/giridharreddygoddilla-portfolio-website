@@ -22,35 +22,49 @@ export default function ResumeSection({ onView }: { onView: () => void }) {
         <div className="lg:sticky lg:top-28 lg:self-start">
           <p className="font-serif text-3xl italic leading-tight text-bone">Every milestone, on one page.</p>
           <p className="mt-3 text-sm leading-relaxed text-mist">
-            Postgraduate education, industrial training, machine learning projects, leadership honors and {certifications.length} credentials — view it interactively or download the PDF.
+            MSc Data Science (Distinction), 2+ years across SQL, PySpark ETL and BI reporting, flagship projects, and {certifications.length} verified certifications — view interactively or download in ATS PDF, Premium PDF, or editable DOCX.
           </p>
           <div className="mt-6 flex flex-col gap-3">
             <Magnetic className="w-full">
               <button
                 type="button"
-                data-cursor="view"
                 onClick={onView}
-                className="flex min-h-12 w-full items-center justify-center gap-2 rounded-md bg-bone px-6 text-[15px] font-bold text-ink transition hover:bg-white"
+                className="flex min-h-12 w-full items-center justify-center gap-2 rounded-md bg-bone px-6 text-[15px] font-bold text-ink transition hover:bg-white cursor-pointer"
               >
-                ▶ View Full PDF
+                ▶ View Interactive PDF
               </button>
             </Magnetic>
             <Magnetic className="w-full">
               <a
                 href={profile.resumePdf}
-                download="Giridhar_Reddy_Goddilla_Resume.pdf"
-                data-cursor="link"
+                download="Giridhar_Reddy_Goddilla_Resume_ATS.pdf"
                 className="glass flex min-h-12 w-full items-center justify-center gap-2 rounded-md px-6 text-[15px] font-semibold text-bone transition hover:bg-white/15"
               >
-                ⤓ Download Resume (PDF)
+                ⤓ Download ATS Resume (PDF)
               </a>
             </Magnetic>
+            <div className="grid grid-cols-2 gap-2.5">
+              <a
+                href={profile.resumePremiumPdf}
+                download="Giridhar_Reddy_Goddilla_Resume_Premium.pdf"
+                className="glass flex min-h-11 items-center justify-center gap-1.5 rounded-md px-3 text-xs font-semibold text-[#F3DFA6] transition hover:bg-white/15"
+              >
+                ✨ Premium PDF
+              </a>
+              <a
+                href={profile.resumeDocx}
+                download="Giridhar_Reddy_Goddilla_Resume.docx"
+                className="glass flex min-h-11 items-center justify-center gap-1.5 rounded-md px-3 text-xs font-semibold text-bone transition hover:bg-white/15"
+              >
+                📄 Word DOCX
+              </a>
+            </div>
           </div>
           <dl className="mt-8 grid grid-cols-3 gap-px overflow-hidden rounded-xl bg-white/10 text-center">
             {[
-              { v: 'MSc', k: 'UK Scholar' },
-              { v: String(projects.length), k: 'Originals' },
-              { v: String(certifications.length), k: 'Certs' },
+              { v: '+14%', k: 'YoY Sales' },
+              { v: '339K+', k: 'Records' },
+              { v: 'MSc', k: 'Distinction' },
             ].map((s) => (
               <div key={s.k} className="bg-ink-2 px-2 py-4">
                 <dd className="font-display text-3xl leading-none text-bone">{s.v}</dd>
