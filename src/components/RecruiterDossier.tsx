@@ -63,176 +63,173 @@ export default function RecruiterDossier({
   };
 
   return (
-    <main className="relative min-h-screen bg-[#08090D] text-[#F5F5F5] pt-24 pb-28">
-      {/* Top sticky sub-banner for recruiter mode */}
-      <div className="sticky top-16 md:top-[70px] z-40 border-b border-white/10 bg-[#11131A]/95 backdrop-blur-md shadow-lg shadow-black/40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 sm:gap-3 text-xs">
-          <div className="flex items-center gap-2">
-            <span className="flex h-2 w-2 rounded-full bg-[#38bdf8] animate-pulse" />
-            <span className="font-mono uppercase tracking-widest text-[#38bdf8] font-bold">
-              Recruiter Mode Active
-            </span>
-            <span className="text-[#A3A6B0] hidden md:inline">|</span>
-            <span className="text-[#A3A6B0] hidden md:inline">
-              Verified executive dossier • {profile.visa}
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2.5 w-full sm:w-auto justify-between sm:justify-end">
-            <button
-              type="button"
-              onClick={onSwitchToCinematic}
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 text-white font-medium transition cursor-pointer text-[11px] sm:text-xs"
-            >
-              <span>🎬</span>
-              <span>Switch to Cinematic Series</span>
-            </button>
-            <a
-              href={profile.resumePdf}
-              download="Giridhar_Reddy_Goddilla_Resume_ATS.pdf"
-              className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#E50920] hover:bg-[#ff2438] text-white font-semibold transition cursor-pointer shadow-md shadow-[#E50920]/25 text-[11px] sm:text-xs shrink-0"
-            >
-              <span>↓</span>
-              <span>Download Resume PDF</span>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+    <main className="relative min-h-screen bg-[#08090D] text-[#F5F5F5] pt-24 pb-28 overflow-x-clip">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
         {/* EXECUTIVE HEADER CARD */}
-        <section className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-[#181B24] via-[#11131A] to-[#08090D] p-6 sm:p-8 md:p-10 shadow-2xl">
+        <section className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-[#181B24] via-[#11131A] to-[#08090D] p-6 sm:p-8 lg:p-11 shadow-2xl">
           <div className="absolute top-0 right-0 -mt-12 -mr-12 w-96 h-96 rounded-full bg-[#38bdf8]/10 blur-3xl pointer-events-none" />
           <div className="absolute bottom-0 left-0 -mb-12 -ml-12 w-80 h-80 rounded-full bg-[#E50920]/10 blur-3xl pointer-events-none" />
 
-          <div className="relative flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
-            {/* Identity and ORIGINAL uploaded photograph */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-              <div className="relative group shrink-0">
-                <div className="w-32 h-32 sm:w-36 sm:h-36 rounded-2xl overflow-hidden border-2 border-[#D6AD62]/45 bg-[#11131A] shadow-2xl ring-4 ring-black/40">
-                  <img
-                    src={profile.recruiterPhoto.src}
-                    alt={profile.recruiterPhoto.alt}
-                    className="w-full h-full object-cover object-[50%_18%]"
-                  />
-                </div>
-                <span className="absolute -bottom-2 -right-2 px-2.5 py-0.5 rounded-md bg-[#38bdf8] text-[#08090D] font-mono text-[10px] font-bold uppercase tracking-wider shadow">
-                  UK 2-Yr Visa
-                </span>
+          <div className="relative grid grid-cols-1 lg:grid-cols-[280px_minmax(0,1fr)] xl:grid-cols-[310px_minmax(0,1fr)] gap-8 lg:gap-12 items-center">
+            {/* LEFT SIDE: LinkedIn & GitHub Icons Centered Above Original Photograph */}
+            <div className="flex flex-col items-center">
+              {/* Social Profile Icons — 12mm (~45px) horizontal spacing */}
+              <div className="flex items-center justify-center gap-[45px] mb-5">
+                <a
+                  href={profile.links.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="LinkedIn — Giridhar Reddy Goddilla"
+                  title="LinkedIn"
+                  className="group/icon relative flex h-12 w-12 items-center justify-center rounded-xl border border-white/15 bg-white/[0.06] text-white/90 shadow-lg backdrop-blur-md transition duration-200 hover:-translate-y-0.5 hover:scale-105 hover:border-[#0A66C2]/80 hover:bg-[#0A66C2]/20 hover:text-white hover:shadow-[#0A66C2]/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38bdf8]"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                    className="h-6 w-6 fill-current"
+                  >
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                  </svg>
+                  <span className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 rounded-md border border-white/15 bg-[#0B0D14]/95 px-2.5 py-1 text-[11px] font-medium text-white opacity-0 shadow-lg transition duration-150 group-hover/icon:opacity-100 whitespace-nowrap">
+                    LinkedIn
+                  </span>
+                </a>
+
+                <a
+                  href={profile.links.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="GitHub — Giridhar Reddy Goddilla"
+                  title="GitHub"
+                  className="group/icon relative flex h-12 w-12 items-center justify-center rounded-xl border border-white/15 bg-white/[0.06] text-white/90 shadow-lg backdrop-blur-md transition duration-200 hover:-translate-y-0.5 hover:scale-105 hover:border-white/50 hover:bg-white/15 hover:text-white hover:shadow-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38bdf8]"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                    className="h-6 w-6 fill-current"
+                  >
+                    <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+                  </svg>
+                  <span className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 rounded-md border border-white/15 bg-[#0B0D14]/95 px-2.5 py-1 text-[11px] font-medium text-white opacity-0 shadow-lg transition duration-150 group-hover/icon:opacity-100 whitespace-nowrap">
+                    GitHub
+                  </span>
+                </a>
               </div>
 
-              <div>
-                <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                  <span className="text-xs font-mono uppercase tracking-widest text-[#D6AD62] font-semibold">
-                    {profile.headline}
-                  </span>
-                </div>
-
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white font-sans">
-                  {profile.fullName}
-                </h1>
-
-                <p className="mt-2.5 text-sm sm:text-[15px] text-[#C8CBD4] max-w-2xl leading-relaxed">
-                  {profile.intro}
-                </p>
-
-                {/* Location & Contact Meta */}
-                <div className="mt-4 flex flex-wrap items-center gap-y-2 gap-x-4 text-xs text-[#A3A6B0]">
-                  <span className="inline-flex items-center gap-1.5 text-white/90">
-                    <span className="text-red-400">📍</span>
-                    <span>{profile.location} • {profile.visa}</span>
-                  </span>
-                  <span className="hidden sm:inline text-white/20">•</span>
-                  <a
-                    href={`tel:${profile.phone.replace(/\s+/g, '')}`}
-                    className="hover:text-white transition flex items-center gap-1"
-                  >
-                    <span>📞</span>
-                    <span>{profile.phone}</span>
-                  </a>
-                  <span className="hidden sm:inline text-white/20">•</span>
-                  <button
-                    type="button"
-                    onClick={copyEmail}
-                    className="hover:text-white transition flex items-center gap-1 text-[#38bdf8] cursor-pointer"
-                  >
-                    <span>✉️</span>
-                    <span>{copiedEmail ? 'Copied to clipboard!' : profile.email}</span>
-                  </button>
-                </div>
-
-                {/* Professional Interests */}
-                <div className="mt-4 flex flex-wrap items-center gap-1.5">
-                  {profile.interests.map((interest) => (
-                    <span
-                      key={interest}
-                      className="px-2.5 py-1 rounded-full bg-white/[0.04] border border-white/10 text-[11px] text-white/80 font-medium"
-                    >
-                      {interest}
-                    </span>
-                  ))}
-                </div>
+              {/* Original Uploaded Photograph */}
+              <div className="w-56 h-56 sm:w-64 sm:h-64 lg:w-full lg:h-auto lg:aspect-square max-w-[300px] rounded-2xl overflow-hidden border-2 border-[#D6AD62]/45 bg-[#11131A] shadow-2xl ring-4 ring-black/40">
+                <img
+                  src={profile.recruiterPhoto.src}
+                  alt={profile.recruiterPhoto.alt}
+                  className="w-full h-full object-cover object-[50%_18%]"
+                />
               </div>
             </div>
 
-            {/* Quick action buttons */}
-            <div className="flex flex-col sm:flex-row lg:flex-col gap-2.5 w-full lg:w-64 shrink-0">
-              <a
-                href={profile.resumePdf}
-                download="Giridhar_Reddy_Goddilla_Resume_ATS.pdf"
-                className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[#E50920] hover:bg-[#ff2438] text-white font-bold text-sm tracking-wide transition shadow-lg shadow-[#E50920]/30 cursor-pointer"
-              >
-                <span>📥</span>
-                <span>Download ATS Resume (PDF)</span>
-              </a>
+            {/* RIGHT SIDE: Large Prominent Name, Professional Title, UK Visa & Introduction */}
+            <div className="flex flex-col items-center text-center lg:items-start lg:text-left min-w-0">
+              <h1 className="text-3xl sm:text-5xl xl:text-[52px] font-black uppercase tracking-tight leading-[1.06] text-white font-sans">
+                {profile.fullName}
+              </h1>
 
-              <a
-                href={profile.resumePremiumPdf}
-                download="Giridhar_Reddy_Goddilla_Resume_Premium.pdf"
-                className="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl border border-[#D6AD62]/40 bg-[#D6AD62]/10 hover:bg-[#D6AD62]/20 text-[#F3DFA6] font-semibold text-xs sm:text-sm transition cursor-pointer"
-              >
-                <span>✨</span>
-                <span>Premium Visual PDF</span>
-              </a>
+              <p className="mt-3 text-lg sm:text-xl md:text-2xl font-semibold tracking-wide text-[#D6AD62]">
+                Data Analytics | MSc Data Science
+              </p>
 
-              <div className="flex items-center gap-2 w-full">
+              <div className="mt-4 inline-flex items-center gap-2.5 rounded-full border border-[#38bdf8]/40 bg-[#38bdf8]/10 px-4 py-1.5 backdrop-blur-sm shadow-sm shadow-[#38bdf8]/10">
+                <span className="h-2.5 w-2.5 rounded-full bg-[#38bdf8] shadow-[0_0_8px_#38bdf8]" />
+                <span className="text-sm sm:text-base font-semibold tracking-wide text-[#E0F2FE]">
+                  UK Right to Work – 2-Year Visa
+                </span>
+              </div>
+
+              <p className="mt-5 text-sm sm:text-base text-[#D0D3DC] leading-relaxed max-w-3xl">
+                {profile.intro}
+              </p>
+
+              {/* Location & Contact Meta */}
+              <div className="mt-5 flex flex-wrap items-center justify-center lg:justify-start gap-y-2 gap-x-4 text-xs sm:text-sm text-[#A3A6B0]">
+                <span className="inline-flex items-center gap-1.5 text-white/90">
+                  <span className="text-red-400">📍</span>
+                  <span>{profile.location}</span>
+                </span>
+                <span className="hidden sm:inline text-white/20">•</span>
+                <a
+                  href={`tel:${profile.phone.replace(/\s+/g, '')}`}
+                  className="hover:text-white transition flex items-center gap-1"
+                >
+                  <span>📞</span>
+                  <span>{profile.phone}</span>
+                </a>
+                <span className="hidden sm:inline text-white/20">•</span>
+                <button
+                  type="button"
+                  onClick={copyEmail}
+                  className="hover:text-white transition flex items-center gap-1 text-[#38bdf8] cursor-pointer"
+                >
+                  <span>✉️</span>
+                  <span>{copiedEmail ? 'Copied to clipboard!' : profile.email}</span>
+                </button>
+              </div>
+
+              {/* Professional Interests */}
+              <div className="mt-4 flex flex-wrap items-center justify-center lg:justify-start gap-2">
+                {profile.interests.map((interest) => (
+                  <span
+                    key={interest}
+                    className="px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 text-xs text-white/80 font-medium"
+                  >
+                    {interest}
+                  </span>
+                ))}
+              </div>
+
+              {/* Action Buttons Row */}
+              <div className="mt-6 flex flex-wrap items-center justify-center lg:justify-start gap-2.5 w-full">
+                <a
+                  href={profile.resumePdf}
+                  download="Giridhar_Reddy_Goddilla_Resume_ATS.pdf"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#E50920] hover:bg-[#ff2438] text-white font-bold text-xs sm:text-sm tracking-wide transition shadow-lg shadow-[#E50920]/30 cursor-pointer"
+                >
+                  <span>📥</span>
+                  <span>Download ATS Resume (PDF)</span>
+                </a>
+
+                <a
+                  href={profile.resumePremiumPdf}
+                  download="Giridhar_Reddy_Goddilla_Resume_Premium.pdf"
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-[#D6AD62]/40 bg-[#D6AD62]/10 hover:bg-[#D6AD62]/20 text-[#F3DFA6] font-semibold text-xs sm:text-sm transition cursor-pointer"
+                >
+                  <span>✨</span>
+                  <span>Premium Visual PDF</span>
+                </a>
+
                 <button
                   type="button"
                   onClick={onOpenResumeModal}
-                  className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border border-white/15 bg-white/5 hover:bg-white/10 text-white font-semibold text-xs transition cursor-pointer"
+                  className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 text-white font-semibold text-xs sm:text-sm transition cursor-pointer"
                 >
                   <span>👁️</span>
                   <span>Preview PDF</span>
                 </button>
+
                 <a
                   href={profile.resumeDocx}
                   download="Giridhar_Reddy_Goddilla_Resume.docx"
-                  className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border border-white/15 bg-white/5 hover:bg-white/10 text-white font-semibold text-xs transition"
+                  className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 text-white font-semibold text-xs sm:text-sm transition"
                 >
                   <span>📄</span>
                   <span>DOCX</span>
                 </a>
-              </div>
 
-              <div className="flex items-center gap-2 w-full">
-                <a
-                  href={profile.links.linkedin}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] text-xs font-medium transition"
+                <button
+                  type="button"
+                  onClick={onSwitchToCinematic}
+                  className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl border border-white/10 bg-white/[0.03] hover:bg-white/10 text-[#C8CBD4] hover:text-white font-medium text-xs sm:text-sm transition cursor-pointer"
                 >
-                  <span className="text-[#38bdf8] font-bold">in</span>
-                  <span>LinkedIn</span>
-                </a>
-                <a
-                  href={profile.links.github}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] text-xs font-medium transition"
-                >
-                  <span>🐙</span>
-                  <span>GitHub</span>
-                </a>
+                  <span>🎬</span>
+                  <span>Cinematic Series</span>
+                </button>
               </div>
             </div>
           </div>

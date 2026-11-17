@@ -122,13 +122,25 @@ assert(
   'Supabase SQL migration provides server-side verification via pgcrypto'
 );
 
-// TEST 8: Recruiter Action Bar & University Logos
-console.log('\n8. Checking Recruiter Action Bar & Education Logos...');
+// TEST 8: Recruiter Profile Layout Redesign, Social Links & Education Logos
+console.log('\n8. Checking Recruiter Profile Redesign & Education Logos...');
 const recruiterTsx = fs.readFileSync(path.join(rootDir, 'src', 'components', 'RecruiterDossier.tsx'), 'utf-8');
 
 assert(
-  recruiterTsx.includes('sticky top-16 md:top-[70px]') && recruiterTsx.includes('Recruiter Mode Active'),
-  'Recruiter sticky action bar remains pinned while scrolling'
+  !recruiterTsx.includes('sticky top-16') && !recruiterTsx.includes('Recruiter Mode Active'),
+  'Fixed/sticky top recruiter banner is completely removed'
+);
+assert(
+  recruiterTsx.includes('gap-[45px]') &&
+    recruiterTsx.includes('aria-label="LinkedIn') &&
+    recruiterTsx.includes('aria-label="GitHub') &&
+    recruiterTsx.includes('rel="noopener noreferrer"'),
+  'LinkedIn & GitHub SVG icons are centered above photo with 45px spacing and safe external link attributes'
+);
+assert(
+  recruiterTsx.includes('Data Analytics | MSc Data Science') &&
+    recruiterTsx.includes('UK Right to Work – 2-Year Visa'),
+  'Prominent name, professional title, and UK Right to Work – 2-Year Visa are rendered on the right side'
 );
 assert(
   recruiterTsx.includes('UniversityLogo'),
