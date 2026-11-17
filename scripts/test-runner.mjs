@@ -122,8 +122,8 @@ assert(
   'Supabase SQL migration provides server-side verification via pgcrypto'
 );
 
-// TEST 8: Recruiter Profile Layout Redesign, Social Links & Education Logos
-console.log('\n8. Checking Recruiter Profile Redesign & Education Logos...');
+// TEST 8: Recruiter Profile Final Layout, Brand Logos & Clean Single Download Resume
+console.log('\n8. Checking Recruiter Profile Layout, Brand Logos & Education Logos...');
 const recruiterTsx = fs.readFileSync(path.join(rootDir, 'src', 'components', 'RecruiterDossier.tsx'), 'utf-8');
 
 assert(
@@ -131,11 +131,22 @@ assert(
   'Fixed/sticky top recruiter banner is completely removed'
 );
 assert(
-  recruiterTsx.includes('gap-[45px]') &&
+  recruiterTsx.includes("gap: '0.5mm'") &&
+    recruiterTsx.includes('h-[53px] w-[53px]') &&
+    recruiterTsx.includes('fill="#0A66C2"') &&
     recruiterTsx.includes('aria-label="LinkedIn') &&
     recruiterTsx.includes('aria-label="GitHub') &&
     recruiterTsx.includes('rel="noopener noreferrer"'),
-  'LinkedIn & GitHub SVG icons are centered above photo with 45px spacing and safe external link attributes'
+  'Official LinkedIn & GitHub brand logos are 10% larger (53px) with exact 0.5mm gap and safe links'
+);
+assert(
+  recruiterTsx.includes('https://giridharreddygoddilla.vercel.app/assets/Giridhar_Reddy_Goddilla_Resume_ATS.pdf') &&
+    recruiterTsx.includes('<span>Download Resume</span>') &&
+    !recruiterTsx.includes('Premium Visual PDF') &&
+    !recruiterTsx.includes('Preview PDF') &&
+    !recruiterTsx.includes('DOCX') &&
+    !recruiterTsx.includes('Cinematic Series'),
+  'Single Download Resume button points to ATS PDF and all unwanted resume/series options are completely removed'
 );
 assert(
   recruiterTsx.includes('Data Analytics | MSc Data Science') &&
