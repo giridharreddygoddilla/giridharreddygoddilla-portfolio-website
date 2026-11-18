@@ -68,99 +68,9 @@ export default function RecruiterDossier({
           <div className="absolute top-0 right-0 -mt-12 -mr-12 w-96 h-96 rounded-full bg-[#38bdf8]/10 blur-3xl pointer-events-none" />
           <div className="absolute bottom-0 left-0 -mb-12 -ml-12 w-80 h-80 rounded-full bg-[#E50920]/10 blur-3xl pointer-events-none" />
 
-          <div className="relative grid grid-cols-1 lg:grid-cols-[290px_minmax(0,1fr)] xl:grid-cols-[310px_minmax(0,1fr)] gap-8 lg:gap-12 items-center">
-            {/* LEFT COLUMN: 1. Official Brand Logos  2. Original Photograph  3. Download Resume */}
-            <div className="flex flex-col items-center">
-              {/* Official LinkedIn & GitHub Brand Logos — exact 0.5mm gap, ~10% larger (53px x 53px) */}
-              <div
-                className="flex items-center justify-center mb-4"
-                style={{ gap: '0.5mm' }}
-              >
-                <a
-                  href={profile.links.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="LinkedIn — Giridhar Reddy Goddilla"
-                  title="LinkedIn"
-                  className="group/icon relative flex h-[53px] w-[53px] items-center justify-center rounded-xl border border-white/15 bg-white/[0.06] shadow-lg backdrop-blur-md transition duration-200 hover:-translate-y-0.5 hover:scale-105 hover:border-[#0A66C2]/80 hover:bg-[#0A66C2]/20 hover:shadow-[#0A66C2]/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38bdf8]"
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                    className="h-[30px] w-[30px]"
-                  >
-                    <rect x="2" y="2" width="20" height="20" rx="2.5" fill="#FFFFFF" />
-                    <path
-                      fill="#0A66C2"
-                      d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"
-                    />
-                  </svg>
-                  <span className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 rounded-md border border-white/15 bg-[#0B0D14]/95 px-2.5 py-1 text-[11px] font-medium text-white opacity-0 shadow-lg transition duration-150 group-hover/icon:opacity-100 whitespace-nowrap">
-                    LinkedIn
-                  </span>
-                </a>
-
-                <a
-                  href={profile.links.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="GitHub — Giridhar Reddy Goddilla"
-                  title="GitHub"
-                  className="group/icon relative flex h-[53px] w-[53px] items-center justify-center rounded-xl border border-white/15 bg-white/[0.06] shadow-lg backdrop-blur-md transition duration-200 hover:-translate-y-0.5 hover:scale-105 hover:border-white/50 hover:bg-white/15 hover:shadow-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38bdf8]"
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                    className="h-[30px] w-[30px]"
-                  >
-                    <path
-                      fill="#FFFFFF"
-                      d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
-                    />
-                  </svg>
-                  <span className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 rounded-md border border-white/15 bg-[#0B0D14]/95 px-2.5 py-1 text-[11px] font-medium text-white opacity-0 shadow-lg transition duration-150 group-hover/icon:opacity-100 whitespace-nowrap">
-                    GitHub
-                  </span>
-                </a>
-              </div>
-
-              {/* Original Uploaded Photograph — preserved untouched */}
-              <div className="w-56 h-56 sm:w-64 sm:h-64 lg:w-full lg:h-auto lg:aspect-square max-w-[300px] rounded-2xl overflow-hidden border-2 border-[#D6AD62]/45 bg-[#11131A] shadow-2xl ring-4 ring-black/40">
-                <img
-                  src={profile.recruiterPhoto.src}
-                  alt={profile.recruiterPhoto.alt}
-                  className="w-full h-full object-cover object-[50%_18%]"
-                />
-              </div>
-
-              {/* Single Clean Download Resume Button directly underneath photograph */}
-              <a
-                href="https://giridharreddygoddilla.vercel.app/assets/Giridhar_Reddy_Goddilla_Resume_ATS.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                download="Giridhar_Reddy_Goddilla_Resume.pdf"
-                className="mt-5 inline-flex items-center justify-center gap-2.5 px-6 py-3 rounded-xl bg-[#E50920] hover:bg-[#ff2438] text-white font-bold text-sm tracking-wide transition shadow-lg shadow-[#E50920]/30 hover:-translate-y-0.5 cursor-pointer"
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                  className="h-4 w-4"
-                >
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="7 10 12 15 17 10" />
-                  <line x1="12" y1="15" x2="12" y2="3" />
-                </svg>
-                <span>Download Resume</span>
-              </a>
-            </div>
-
-            {/* RIGHT COLUMN: Large Prominent Name, Professional Title, UK Visa & Introduction */}
-            <div className="flex flex-col items-center text-center lg:items-start lg:text-left min-w-0">
+          <div className="relative grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_316px] lg:grid-cols-[minmax(0,1fr)_336px] xl:grid-cols-[minmax(0,1fr)_350px] gap-8 lg:gap-12 items-center">
+            {/* LEFT COLUMN: Professional Identity, Visa Badge, Introduction, Contact & Skill Badges */}
+            <div className="flex flex-col items-center text-center md:items-start md:text-left min-w-0">
               <h1 className="text-3xl sm:text-5xl xl:text-[52px] font-black uppercase tracking-tight leading-[1.06] text-white font-sans">
                 {profile.fullName}
               </h1>
@@ -181,7 +91,7 @@ export default function RecruiterDossier({
               </p>
 
               {/* Location & Contact Meta */}
-              <div className="mt-5 flex flex-wrap items-center justify-center lg:justify-start gap-y-2 gap-x-4 text-xs sm:text-sm text-[#A3A6B0]">
+              <div className="mt-5 flex flex-wrap items-center justify-center md:justify-start gap-y-2 gap-x-4 text-xs sm:text-sm text-[#A3A6B0]">
                 <span className="inline-flex items-center gap-1.5 text-white/90">
                   <span className="text-red-400">📍</span>
                   <span>{profile.location}</span>
@@ -205,8 +115,8 @@ export default function RecruiterDossier({
                 </button>
               </div>
 
-              {/* Professional Interests */}
-              <div className="mt-4 flex flex-wrap items-center justify-center lg:justify-start gap-2">
+              {/* Technical Expertise & Skill Badges */}
+              <div className="mt-4 flex flex-wrap items-center justify-center md:justify-start gap-2">
                 {profile.interests.map((interest) => (
                   <span
                     key={interest}
@@ -215,6 +125,118 @@ export default function RecruiterDossier({
                     {interest}
                   </span>
                 ))}
+              </div>
+            </div>
+
+            {/* RIGHT COLUMN: 1. Official Brand Logos  2. Original Photograph  3. Download + Preview Resume */}
+            <div className="flex flex-col items-center w-full">
+              {/* Official LinkedIn & GitHub Brand Logos — exact 0.4mm (~1.5px) gap, +10% larger (58px container, 33px SVG) */}
+              <div
+                className="flex items-center justify-center mb-4"
+                style={{ gap: '0.4mm' }}
+              >
+                <a
+                  href={profile.links.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="LinkedIn — Giridhar Reddy Goddilla"
+                  title="LinkedIn"
+                  className="group/icon relative flex h-[58px] w-[58px] items-center justify-center rounded-xl border border-white/15 bg-white/[0.06] shadow-lg backdrop-blur-md transition duration-200 hover:-translate-y-0.5 hover:scale-105 hover:border-[#0A66C2]/80 hover:bg-[#0A66C2]/20 hover:shadow-[#0A66C2]/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38bdf8]"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                    className="h-[33px] w-[33px]"
+                  >
+                    <rect x="2" y="2" width="20" height="20" rx="2.5" fill="#FFFFFF" />
+                    <path
+                      fill="#0A66C2"
+                      d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"
+                    />
+                  </svg>
+                  <span className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 rounded-md border border-white/15 bg-[#0B0D14]/95 px-2.5 py-1 text-[11px] font-medium text-white opacity-0 shadow-lg transition duration-150 group-hover/icon:opacity-100 whitespace-nowrap">
+                    LinkedIn
+                  </span>
+                </a>
+
+                <a
+                  href={profile.links.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="GitHub — Giridhar Reddy Goddilla"
+                  title="GitHub"
+                  className="group/icon relative flex h-[58px] w-[58px] items-center justify-center rounded-xl border border-white/15 bg-white/[0.06] shadow-lg backdrop-blur-md transition duration-200 hover:-translate-y-0.5 hover:scale-105 hover:border-white/50 hover:bg-white/15 hover:shadow-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38bdf8]"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                    className="h-[33px] w-[33px]"
+                  >
+                    <path
+                      fill="#FFFFFF"
+                      d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
+                    />
+                  </svg>
+                  <span className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 rounded-md border border-white/15 bg-[#0B0D14]/95 px-2.5 py-1 text-[11px] font-medium text-white opacity-0 shadow-lg transition duration-150 group-hover/icon:opacity-100 whitespace-nowrap">
+                    GitHub
+                  </span>
+                </a>
+              </div>
+
+              {/* Original Uploaded Photograph — untouched, exact 1:1 aspect ratio via object-contain */}
+              <div className="w-full max-w-[330px] rounded-2xl overflow-hidden border-2 border-[#D6AD62]/45 bg-[#11131A] shadow-2xl ring-4 ring-black/40">
+                <img
+                  src={profile.recruiterPhoto.src}
+                  alt={profile.recruiterPhoto.alt}
+                  className="block w-full h-auto object-contain"
+                />
+              </div>
+
+              {/* Two Resume Buttons Side by Side Directly Underneath Photograph */}
+              <div className="mt-5 grid grid-cols-2 gap-2.5 w-full max-w-[330px]">
+                <a
+                  href="https://giridharreddygoddilla.vercel.app/assets/Giridhar_Reddy_Goddilla_Resume_ATS.pdf"
+                  download="Giridhar_Reddy_Goddilla_Resume.pdf"
+                  className="inline-flex items-center justify-center gap-1.5 px-2.5 lg:px-3 py-2.5 rounded-xl bg-[#E50920] hover:bg-[#ff2438] text-white font-bold text-[11.5px] lg:text-[13px] tracking-wide transition shadow-lg shadow-[#E50920]/30 hover:-translate-y-0.5 cursor-pointer whitespace-nowrap"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                    className="h-3.5 w-3.5 shrink-0"
+                  >
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                  </svg>
+                  <span>Download Resume</span>
+                </a>
+
+                <a
+                  href="https://giridharreddygoddilla.vercel.app/assets/Giridhar_Reddy_Goddilla_Resume_ATS.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-1.5 px-2.5 lg:px-3 py-2.5 rounded-xl border border-white/20 bg-white/[0.06] hover:bg-white/15 hover:border-white/35 text-white font-semibold text-[11.5px] lg:text-[13px] tracking-wide transition hover:-translate-y-0.5 cursor-pointer whitespace-nowrap"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.1"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                    className="h-3.5 w-3.5 shrink-0"
+                  >
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                  <span>Preview Resume</span>
+                </a>
               </div>
             </div>
           </div>
