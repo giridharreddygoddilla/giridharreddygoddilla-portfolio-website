@@ -23,9 +23,8 @@ export default function NavigationGuideModal({ isOpen, onClose }: NavigationGuid
   if (!isOpen) return null;
 
   const shortcuts = [
-    { key: 'H', desc: 'Go to Home / The Series' },
-    { key: 'D', desc: 'Go to Developer Workstation' },
-    { key: 'R', desc: 'Go to Recruiter Dossier' },
+    { key: 'H', desc: 'Go to Personal Profile' },
+    { key: 'R', desc: 'Go to Professional Profile' },
     { key: 'M', desc: 'Toggle Cinematic Sound FX' },
     { key: '?', desc: 'Open this Navigation Guide' },
     { key: 'Esc', desc: 'Close open dialogs & menus' },
@@ -34,23 +33,18 @@ export default function NavigationGuideModal({ isOpen, onClose }: NavigationGuid
   const modes = [
     {
       icon: '🎬',
-      title: 'Home (The Series)',
-      desc: 'Cinematic streaming documentary format with narrative episodes, interactive sound, and showcase projects.',
-    },
-    {
-      icon: '🎨',
-      title: 'Creative Page',
-      desc: 'Visual storytelling, character artwork, design philosophy, case studies, and editorial identity (no academic distractions).',
-    },
-    {
-      icon: '💻',
-      title: 'Developer Page',
-      desc: 'Deep technical architecture, LightGBM fraud detection ML system, PySpark pipelines, interactive code tabs & live GitHub repos.',
+      title: 'Personal',
+      desc: 'The person behind it all — cinematic narrative episodes, interactive sound, and flagship projects.',
     },
     {
       icon: '👔',
-      title: 'Recruiter Dossier',
-      desc: 'High-density, ATS-tailored executive dossier with hard metrics, core skills taxonomy, and one-click PDF resume download.',
+      title: 'Professional',
+      desc: 'The ambition behind the work — executive profile, verified experience, skills matrix, and resume downloads.',
+    },
+    {
+      icon: '🎨',
+      title: 'Creative',
+      desc: 'The imagination behind the ideas — visual storytelling, artwork, design philosophy, and case studies.',
     },
   ];
 
@@ -101,13 +95,13 @@ export default function NavigationGuideModal({ isOpen, onClose }: NavigationGuid
             </button>
           </div>
 
-          {/* Section: 4 Distinct Experiences */}
+          {/* Section: 3 Distinct Profiles */}
           <div className="mt-6">
             <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-[#D6AD62] mb-3">
-              1. Four Tailored Experiences
+              1. Three Tailored Profiles
             </h3>
             <p className="text-xs text-white/60 mb-4 leading-relaxed">
-              Use the persistent switcher at the top-left (thumbnail + ▼ arrow) or the 3-line hamburger menu to freely navigate between 4 dedicated perspectives:
+              Use the persistent switcher at the top-left (thumbnail + ▼ arrow) or the 3-line hamburger menu to freely navigate between 3 dedicated perspectives:
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

@@ -700,7 +700,7 @@ export const introSlides: IntroSlide[] = [
   },
 ];
 
-export type ProfileId = 'giridhar' | 'recruiter' | 'developer' | 'creative';
+export type ProfileId = 'giridhar' | 'recruiter' | 'creative';
 export type SectionId = 'about' | 'portrait' | 'journey' | 'originals' | 'picks' | 'skills' | 'moments' | 'story';
 
 export const viewerProfiles: {
@@ -712,29 +712,22 @@ export const viewerProfiles: {
 }[] = [
   {
     id: 'giridhar',
-    name: 'Giridhar',
-    blurb: 'The full cinematic series, in narrative order',
+    name: 'PERSONAL',
+    blurb: 'The person behind it all.',
     color: '#E50920',
     order: ['about', 'portrait', 'journey', 'originals', 'picks', 'skills', 'moments', 'story'],
   },
   {
     id: 'recruiter',
-    name: 'Recruiter',
-    blurb: 'Dedicated Executive Recruiter Dossier with original photo, verified resume & downloads',
+    name: 'PROFESSIONAL',
+    blurb: 'The ambition behind the work.',
     color: '#4cc9ff',
     order: ['story', 'moments', 'skills', 'originals', 'portrait', 'about', 'journey', 'picks'],
   },
   {
-    id: 'developer',
-    name: 'Developer / Analyst',
-    blurb: 'Projects, SQL, PySpark, ML models & GitHub first',
-    color: '#46e3a8',
-    order: ['originals', 'skills', 'journey', 'picks', 'portrait', 'moments', 'about', 'story'],
-  },
-  {
     id: 'creative',
-    name: 'Creative',
-    blurb: 'The story arc, portrait & highlights first',
+    name: 'CREATIVE',
+    blurb: 'The imagination behind the ideas.',
     color: '#ffb547',
     order: ['portrait', 'journey', 'picks', 'originals', 'moments', 'about', 'skills', 'story'],
   },

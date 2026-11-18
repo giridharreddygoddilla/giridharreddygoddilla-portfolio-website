@@ -38,10 +38,9 @@ export default function Navbar({
   });
 
   const navLinks: { id: PageId; label: string; icon: string }[] = [
-    { id: 'home', label: 'Series', icon: '🎬' },
+    { id: 'home', label: 'Personal', icon: '🎬' },
+    { id: 'recruiter', label: 'Professional', icon: '👔' },
     { id: 'creative', label: 'Creative', icon: '🎨' },
-    { id: 'developer', label: 'Developer', icon: '💻' },
-    { id: 'recruiter', label: 'Recruiter', icon: '👔' },
   ];
 
   return (

@@ -120,9 +120,9 @@ export function getProfileLockState(id: ProfileId): ProfileLockState {
   };
 }
 
-/** Get lock states for all 4 profiles */
+/** Get lock states for all 3 profiles */
 export function getAllLockStates(): Record<ProfileId, ProfileLockState> {
-  const profiles: ProfileId[] = ['giridhar', 'recruiter', 'developer', 'creative'];
+  const profiles: ProfileId[] = ['giridhar', 'recruiter', 'creative'];
   const res = {} as Record<ProfileId, ProfileLockState>;
   profiles.forEach((p) => {
     res[p] = getProfileLockState(p);

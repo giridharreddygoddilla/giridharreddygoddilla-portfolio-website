@@ -5,13 +5,13 @@ import { playClick } from '../hooks/useSoundFX';
 interface CreativePageProps {
   onSelectProject: (p: Project) => void;
   onNavigateHome: () => void;
-  onNavigateDeveloper: () => void;
+  onNavigateProfessional: () => void;
 }
 
 export default function CreativePage({
   onSelectProject,
   onNavigateHome,
-  onNavigateDeveloper,
+  onNavigateProfessional,
 }: CreativePageProps) {
 
   const creativeProjects = projects.filter((p) =>
@@ -137,11 +137,11 @@ export default function CreativePage({
                 type="button"
                 onClick={() => {
                   playClick();
-                  onNavigateDeveloper();
+                  onNavigateProfessional();
                 }}
                 className="px-6 py-3 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 text-white font-semibold text-sm transition cursor-pointer"
               >
-                VIEW DEVELOPER CODE →
+                VIEW PROFESSIONAL PROFILE →
               </button>
             </div>
           </div>

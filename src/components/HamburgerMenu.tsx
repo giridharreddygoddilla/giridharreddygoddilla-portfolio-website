@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { playClick } from '../hooks/useSoundFX';
 
-export type PageId = 'home' | 'creative' | 'developer' | 'recruiter';
+export type PageId = 'home' | 'recruiter' | 'creative';
 
 interface HamburgerMenuProps {
   isOpen: boolean;
@@ -43,10 +43,9 @@ export default function HamburgerMenu({
   }, [isOpen, onToggle]);
 
   const navItems: { id: PageId; label: string; icon: string; desc: string }[] = [
-    { id: 'home', label: 'Home (Series)', icon: '🎬', desc: 'The full cinematic narrative documentary' },
-    { id: 'creative', label: 'Creative', icon: '🎨', desc: 'Visual identity, design philosophy & storytelling' },
-    { id: 'developer', label: 'Developer', icon: '💻', desc: 'ML pipelines, PySpark clusters & GitHub repos' },
-    { id: 'recruiter', label: 'Recruiter', icon: '👔', desc: 'Executive dossier, verified facts & 1-click resume' },
+    { id: 'home', label: 'Personal', icon: '🎬', desc: 'The person behind it all.' },
+    { id: 'recruiter', label: 'Professional', icon: '👔', desc: 'The ambition behind the work.' },
+    { id: 'creative', label: 'Creative', icon: '🎨', desc: 'The imagination behind the ideas.' },
   ];
 
   return (
@@ -228,7 +227,7 @@ export default function HamburgerMenu({
                     >
                       <span className="flex items-center gap-2">
                         <span>👥</span>
-                        <span>All 4 Profiles (Chooser)</span>
+                        <span>All 3 Profiles (Chooser)</span>
                       </span>
                       <span className="text-[10px] font-mono text-[#D6AD62]">Entry</span>
                     </button>

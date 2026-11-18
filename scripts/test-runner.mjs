@@ -131,14 +131,14 @@ assert(
   'Fixed/sticky top recruiter banner is completely removed'
 );
 assert(
-  recruiterTsx.includes("gap: '0.3mm'") &&
+  recruiterTsx.includes('gap-[12px]') &&
     recruiterTsx.includes('h-[58px] w-[58px]') &&
     recruiterTsx.includes('h-[33px] w-[33px]') &&
     recruiterTsx.includes('fill="#0A66C2"') &&
     recruiterTsx.includes('aria-label="LinkedIn') &&
     recruiterTsx.includes('aria-label="GitHub') &&
     recruiterTsx.includes('rel="noopener noreferrer"'),
-  'Official LinkedIn & GitHub brand logos are +10% larger (58px/33px) with exact 0.3mm gap and safe links'
+  'Official LinkedIn & GitHub brand logos have exact 12px gap, 58px/33px sizing, and safe links'
 );
 assert(
   recruiterTsx.includes('https://giridharreddygoddilla.vercel.app/assets/Giridhar_Reddy_Goddilla_Resume_ATS.pdf') &&
@@ -184,6 +184,41 @@ assert(
 assert(
   portfolioTs.includes('Bank Loan & Credit Risk Analysis') && portfolioTs.includes('14% year-on-year sales increase'),
   'Portfolio data is synchronised with updated resume projects and impact'
+);
+
+// TEST 10: Three-Profile Landing Redesign & Image Corrections
+console.log('\n10. Checking Three-Profile Redesign & Image Corrections...');
+const selectorTsx = fs.readFileSync(path.join(rootDir, 'src', 'components', 'ProfileSelector.tsx'), 'utf-8');
+const navbarTsx = fs.readFileSync(path.join(rootDir, 'src', 'components', 'Navbar.tsx'), 'utf-8');
+
+assert(
+  portfolioTs.includes("name: 'PERSONAL'") &&
+    portfolioTs.includes("blurb: 'The person behind it all.'") &&
+    portfolioTs.includes("name: 'PROFESSIONAL'") &&
+    portfolioTs.includes("blurb: 'The ambition behind the work.'") &&
+    portfolioTs.includes("name: 'CREATIVE'") &&
+    portfolioTs.includes("blurb: 'The imagination behind the ideas.'") &&
+    !portfolioTs.includes('Developer / Analyst'),
+  'Exactly three profiles (PERSONAL, PROFESSIONAL, CREATIVE) configured with exact descriptions and Developer removed'
+);
+assert(
+  selectorTsx.includes('GIRIDHAR REDDY GODDILLA — THE JOURNEY') &&
+    selectorTsx.includes('THREE SIDES. ONE STORY.') &&
+    selectorTsx.includes('One identity. Three dimensions. Countless ways to discover.'),
+  'Landing page heading matches exact wording, punctuation, and hierarchy'
+);
+assert(
+  selectorTsx.includes('giridhar: characterAssets.hero.src') &&
+    selectorTsx.includes('recruiter: profile.recruiterPhoto.src') &&
+    selectorTsx.includes('creative: characterAssets.walking.src') &&
+    !selectorTsx.includes('developer:'),
+  'Profile images strictly mapped: PERSONAL (existing), PROFESSIONAL (original photo), CREATIVE (existing)'
+);
+assert(
+  selectorTsx.includes('grid-cols-2 md:grid-cols-3') &&
+    !navbarTsx.includes('Developer') &&
+    !appTsx.includes('DeveloperPage'),
+  'Compact mobile 2-column / desktop 3-column grid active and Developer completely removed from navigation & routing'
 );
 
 // Final Summary

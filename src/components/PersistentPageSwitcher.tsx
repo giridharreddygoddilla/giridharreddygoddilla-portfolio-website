@@ -4,7 +4,7 @@ import { characterAssets } from '../data/portfolio';
 import { playClick } from '../hooks/useSoundFX';
 import { getProfileLockState } from '../services/lockManager';
 
-export type PageId = 'home' | 'creative' | 'developer' | 'recruiter';
+export type PageId = 'home' | 'recruiter' | 'creative';
 
 interface PersistentPageSwitcherProps {
   activePage: PageId;
@@ -42,35 +42,27 @@ export default function PersistentPageSwitcher({
   const pages: { id: PageId; name: string; tag: string; icon: string; desc: string; color: string }[] = [
     {
       id: 'home',
-      name: 'Home',
-      tag: 'THE SERIES',
+      name: 'Personal',
+      tag: 'PERSONAL',
       icon: '🎬',
-      desc: 'Cinematic episodic narrative & flagship projects',
+      desc: 'The person behind it all.',
       color: '#E50920',
+    },
+    {
+      id: 'recruiter',
+      name: 'Professional',
+      tag: 'PROFESSIONAL',
+      icon: '👔',
+      desc: 'The ambition behind the work.',
+      color: '#38bdf8',
     },
     {
       id: 'creative',
       name: 'Creative',
-      tag: 'ART & STORY',
+      tag: 'CREATIVE',
       icon: '🎨',
-      desc: 'Design philosophy, visual identity & editorial narrative',
+      desc: 'The imagination behind the ideas.',
       color: '#ffb547',
-    },
-    {
-      id: 'developer',
-      name: 'Developer',
-      tag: 'CODE & ML',
-      icon: '💻',
-      desc: 'Production ML, PySpark big data & GitHub repositories',
-      color: '#46e3a8',
-    },
-    {
-      id: 'recruiter',
-      name: 'Recruiter',
-      tag: 'EXECUTIVE DOSSIER',
-      icon: '👔',
-      desc: 'High-density candidate profile & 1-click resume download',
-      color: '#38bdf8',
     },
   ];
 
@@ -130,9 +122,9 @@ export default function PersistentPageSwitcher({
           >
             <div className="px-3 py-2 border-b border-white/5 mb-1 flex items-center justify-between">
               <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#D6AD62]">
-                SELECT EXPERIENCE
+                SELECT PROFILE
               </span>
-              <span className="text-[10px] text-white/40 font-mono">4 PAGES</span>
+              <span className="text-[10px] text-white/40 font-mono">3 PROFILES</span>
             </div>
 
             <div className="space-y-1">
@@ -198,7 +190,7 @@ export default function PersistentPageSwitcher({
                 >
                   <span className="flex items-center gap-2">
                     <span>👥</span>
-                    <span>All 4 Profiles (Chooser)</span>
+                    <span>All 3 Profiles (Chooser)</span>
                   </span>
                   <span className="text-[10px] font-mono text-[#D6AD62]">Switch</span>
                 </button>

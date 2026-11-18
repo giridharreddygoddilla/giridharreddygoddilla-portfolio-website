@@ -19,7 +19,6 @@ import Achievements from './components/Achievements';
 import ResumeSection from './components/ResumeViewer';
 import RecruiterDossier from './components/RecruiterDossier';
 import CreativePage from './components/CreativePage';
-import DeveloperPage from './components/DeveloperPage';
 import NavigationGuideModal from './components/NavigationGuideModal';
 import PasswordGateModal from './components/PasswordGateModal';
 import ProfileLockManagerModal from './components/ProfileLockManagerModal';
@@ -39,14 +38,12 @@ const STORAGE_KEY = 'giridhar-series-profile';
 
 function profileToPage(profileId: ProfileId): PageId {
   if (profileId === 'recruiter') return 'recruiter';
-  if (profileId === 'developer') return 'developer';
   if (profileId === 'creative') return 'creative';
   return 'home';
 }
 
 function pageToProfile(pageId: PageId): ProfileId {
   if (pageId === 'recruiter') return 'recruiter';
-  if (pageId === 'developer') return 'developer';
   if (pageId === 'creative') return 'creative';
   return 'giridhar';
 }
@@ -54,21 +51,20 @@ function pageToProfile(pageId: PageId): ProfileId {
 function getInitialStage(): Stage {
   try {
     const hash = window.location.hash.replace('#', '');
-    if (['series', 'home', 'recruiter', 'developer', 'creative'].includes(hash)) {
+    if (['personal', 'series', 'home', 'professional', 'recruiter', 'creative'].includes(hash)) {
       return 'home';
     }
   } catch {
     /* window unavailable */
   }
-  // Root URL immediately displays the four-profile selection screen
+  // Root URL immediately displays the three-profile selection screen
   return 'profiles';
 }
 
 function getInitialProfile(): ProfileId {
   try {
     const hash = window.location.hash.replace('#', '');
-    if (hash === 'recruiter') return 'recruiter';
-    if (hash === 'developer') return 'developer';
+    if (hash === 'professional' || hash === 'recruiter') return 'recruiter';
     if (hash === 'creative') return 'creative';
   } catch {
     /* window unavailable */
@@ -133,7 +129,7 @@ function Series() {
       try {
         sessionStorage.setItem(STORAGE_KEY, pId);
         if (pushHistory) {
-          const hash = page === 'home' ? 'series' : page;
+          const hash = page === 'home' ? 'personal' : page === 'recruiter' ? 'professional' : page;
           window.history.pushState({ page, pId }, '', `#${hash}`);
         }
       } catch {
@@ -172,7 +168,7 @@ function Series() {
 
       try {
         sessionStorage.setItem(STORAGE_KEY, id);
-        const hash = targetPage === 'home' ? 'series' : targetPage;
+        const hash = targetPage === 'home' ? 'personal' : targetPage === 'recruiter' ? 'professional' : targetPage;
         window.history.pushState({ page: targetPage, id }, '', `#${hash}`);
       } catch {
         /* storage unavailable */
@@ -201,12 +197,10 @@ function Series() {
       const hash = window.location.hash.replace('#', '');
       if (!hash || hash === 'profiles') {
         setStage('profiles');
-      } else if (['series', 'home', 'recruiter', 'developer', 'creative'].includes(hash)) {
+      } else if (['personal', 'series', 'home', 'professional', 'recruiter', 'creative'].includes(hash)) {
         const targetPage: PageId =
-          hash === 'recruiter'
+          hash === 'professional' || hash === 'recruiter'
             ? 'recruiter'
-            : hash === 'developer'
-            ? 'developer'
             : hash === 'creative'
             ? 'creative'
             : 'home';
@@ -233,9 +227,6 @@ function Series() {
       if (e.key === 'r' || e.key === 'R') {
         playClick();
         handleNavigate('recruiter');
-      } else if (e.key === 'd' || e.key === 'D') {
-        playClick();
-        handleNavigate('developer');
       } else if (e.key === 'h' || e.key === 'H') {
         playClick();
         handleNavigate('home');
@@ -343,20 +334,11 @@ function Series() {
             <CreativePage
               onSelectProject={setProject}
               onNavigateHome={() => handleNavigate('home')}
-              onNavigateDeveloper={() => handleNavigate('developer')}
+              onNavigateProfessional={() => handleNavigate('recruiter')}
             />
           )}
 
-          {/* Page 3: Dedicated Developer Page (Workstation, ML Architecture, Code Tabs, GitHub Repos) */}
-          {activePage === 'developer' && (
-            <DeveloperPage
-              onSelectProject={setProject}
-              onNavigateHome={() => handleNavigate('home')}
-              onNavigateRecruiter={() => handleNavigate('recruiter')}
-            />
-          )}
-
-          {/* Page 4: Dedicated Recruiter Dossier Experience (High Density ATS, Metrics, 1-Click Resume) */}
+          {/* Page 3: Dedicated Professional Profile Experience */}
           {activePage === 'recruiter' && (
             <RecruiterDossier
               onSelectProject={setProject}
