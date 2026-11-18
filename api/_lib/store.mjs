@@ -163,7 +163,7 @@ function createInMemoryStore() {
 
 // Production Supabase PostgreSQL REST Store (service_role server-side only)
 function createSupabaseStore() {
-  const baseUrl = process.env.SUPABASE_URL.trim().replace(/\/$/, '');
+  const baseUrl = process.env.SUPABASE_URL.trim().replace(/\/rest\/v1\/?$/i, '').replace(/\/$/, '');
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY.trim();
 
   async function sbFetch(pathAndQuery, { method = 'GET', body, prefer } = {}) {
