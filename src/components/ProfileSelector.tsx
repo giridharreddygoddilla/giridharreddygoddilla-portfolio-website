@@ -183,8 +183,9 @@ export default function ProfileSelector({
                   {/* Profile Title & Description */}
                   <div className="mt-2.5 sm:mt-4 w-full flex-1 flex flex-col justify-between">
                     <div>
-                      <h2 className="font-display text-lg sm:text-2xl text-white tracking-wide group-hover:text-[#D6AD62] transition duration-200 leading-none">
+                      <h2 className="font-display text-lg sm:text-2xl text-white tracking-wide group-hover:text-[#D6AD62] transition duration-200 leading-tight">
                         {p.name}
+                        {p.id === 'recruiter' && <span className="block">(RECRUITER)</span>}
                       </h2>
                       <p className="mt-1 sm:mt-1.5 text-[11px] sm:text-xs text-white/60 leading-snug">
                         {p.blurb}
