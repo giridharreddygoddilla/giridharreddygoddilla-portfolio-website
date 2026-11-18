@@ -159,7 +159,7 @@ export async function verifyServerProfileAccess(
       error?: string;
     }>(`/api/profile-content?profileId=${encodeURIComponent(profileId)}`, { method: 'GET' });
 
-    if (status === 401 || data.authorized === false) {
+    if (status === 401 && data.locked) {
       serverSnapshot = {
         ...serverSnapshot,
         [profileId]: {

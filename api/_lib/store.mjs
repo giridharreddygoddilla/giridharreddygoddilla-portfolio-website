@@ -165,13 +165,17 @@ function createInMemoryStore() {
 function createSupabaseStore() {
   const baseUrl = process.env.SUPABASE_URL.trim().replace(/\/rest\/v1\/?$/i, '').replace(/\/$/, '');
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY.trim();
+  const isNewSecretKey = serviceKey.startsWith('sb_secret_');
 
   async function sbFetch(pathAndQuery, { method = 'GET', body, prefer } = {}) {
     const headers = {
       apikey: serviceKey,
-      Authorization: `Bearer ${serviceKey}`,
       'Content-Type': 'application/json',
     };
+    // Supabase new `sb_secret_...` keys must NOT be sent as Bearer JWTs; legacy JWT keys use both headers
+    if (!isNewSecretKey) {
+      headers.Authorization = `Bearer ${serviceKey}`;
+    }
     if (prefer) headers.Prefer = prefer;
 
     const res = await fetch(`${baseUrl}/rest/v1/${pathAndQuery}`, {
@@ -182,7 +186,10 @@ function createSupabaseStore() {
 
     if (!res.ok) {
       const text = await res.text().catch(() => '');
-      throw new Error(`Supabase REST error (${res.status}): ${text}`);
+      const err = new Error(`Supabase REST error (${res.status}): ${text}`);
+      err.httpStatus = res.status;
+      err.supabaseDetail = text.slice(0, 200);
+      throw err;
     }
 
     const text = await res.text();

@@ -44,8 +44,15 @@ export async function GET(request) {
     });
   } catch (err) {
     console.error('[GET /api/profiles/status]', err);
+    const detail = String(err?.supabaseDetail || err?.message || '');
+    const hint =
+      err?.httpStatus === 404 || detail.includes('42P01') || detail.includes('profile_locks')
+        ? 'SQL migration table missing — run supabase/migrations/20261118_security_system.sql in Supabase SQL Editor.'
+        : err?.httpStatus === 401 || err?.httpStatus === 403
+        ? 'Supabase key rejected — verify SUPABASE_SERVICE_ROLE_KEY in Vercel.'
+        : 'Unable to reach Supabase — verify SUPABASE_URL in Vercel.';
     return jsonResponse(
-      { error: 'Unable to load profile security status.' },
+      { error: 'Unable to load profile security status.', hint, statusCode: err?.httpStatus || 500 },
       500
     );
   }
