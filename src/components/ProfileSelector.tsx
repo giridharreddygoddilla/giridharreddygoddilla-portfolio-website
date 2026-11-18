@@ -1,8 +1,8 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { profile, viewerProfiles, characterAssets, type ProfileId } from '../data/portfolio';
 import { playClick } from '../hooks/useSoundFX';
-import { getProfileLockState } from '../services/lockManager';
+import { getAllLockStates, subscribeLockStates } from '../services/lockManager';
 import { EASE } from './fx';
 
 export function ProfileAvatar({ id, size = 'lg' }: { id: ProfileId; size?: 'sm' | 'lg' }) {
@@ -58,6 +58,12 @@ export default function ProfileSelector({
   onWatchIntro,
   onOpenLockManager,
 }: ProfileSelectorProps) {
+  const [lockStates, setLockStates] = useState(getAllLockStates);
+
+  useEffect(() => {
+    return subscribeLockStates(() => setLockStates(getAllLockStates()));
+  }, []);
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
@@ -128,7 +134,7 @@ export default function ProfileSelector({
         >
           {viewerProfiles.map((p, index) => {
             const tag = tags[p.id];
-            const lockState = getProfileLockState(p.id);
+            const lockState = lockStates[p.id];
             const isThirdCard = index === 2;
 
             return (

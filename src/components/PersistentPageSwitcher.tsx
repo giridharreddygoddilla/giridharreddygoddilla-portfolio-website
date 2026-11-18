@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { characterAssets } from '../data/portfolio';
 import { playClick } from '../hooks/useSoundFX';
-import { getProfileLockState } from '../services/lockManager';
+import { getAllLockStates, subscribeLockStates } from '../services/lockManager';
 
 export type PageId = 'home' | 'recruiter' | 'creative';
 
@@ -18,7 +18,12 @@ export default function PersistentPageSwitcher({
   onOpenProfileChooser,
 }: PersistentPageSwitcherProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [lockStates, setLockStates] = useState(getAllLockStates);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    return subscribeLockStates(() => setLockStates(getAllLockStates()));
+  }, []);
 
   // Close when clicking outside
   useEffect(() => {
@@ -131,7 +136,7 @@ export default function PersistentPageSwitcher({
               {pages.map((p) => {
                 const isSelected = activePage === p.id;
                 const mappedProfileId = p.id === 'home' ? 'giridhar' : p.id;
-                const lockState = getProfileLockState(mappedProfileId);
+                const lockState = lockStates[mappedProfileId];
                 return (
                   <button
                     key={p.id}

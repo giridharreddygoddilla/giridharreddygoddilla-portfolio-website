@@ -1,20 +1,11 @@
 /**
- * Profile Lock Manager Service
+ * Server-Backed Profile Security & Lock Manager Client
  *
- * Provides cryptographic password management, rate-limiting, and lock control
- * for all 4 portfolio profile experiences:
- *   - Giridhar (Cinematic Series)
- *   - Recruiter (Executive Dossier)
- *   - Developer / Analyst (Engineering Workstation)
- *   - Creative (Editorial Storytelling)
+ * All lock states, password verifications, owner authentication, HTTP-only sessions,
+ * rate limiting, and OTP recovery run strictly server-side via Vercel Functions (`/api/*`)
+ * backed by persistent Supabase PostgreSQL storage.
  *
- * ARCHITECTURAL NOTICE (Client-Side Gate vs. Server-Side Protection):
- * In a static Vite client deployment, this service acts as a visitor-facing cryptographic access gate:
- * content components are unmounted and never rendered in the DOM until authentication succeeds.
- *
- * For full end-to-end data confidentiality where raw JSON/asset bundles must not be transmitted over the wire
- * prior to authentication, use the provided Supabase backend migration (`supabase/migrations/20261101_profile_locks.sql`)
- * which enforces server-side Row Level Security (RLS) and server-evaluated password verification via `pgcrypto`.
+ * Neither localStorage nor sessionStorage is used as a security mechanism.
  */
 
 import type { ProfileId } from '../data/portfolio';
@@ -22,311 +13,354 @@ import type { ProfileId } from '../data/portfolio';
 export interface ProfileLockState {
   isLocked: boolean;
   hasPassword: boolean;
+  unlocked: boolean;
+  sessionVersion?: number;
+  updatedAt?: string;
 }
 
-interface StoredLockData {
-  isLocked: boolean;
-  saltHex?: string;
-  hashHex?: string;
-  iterations?: number;
+export interface RecoveryProviderStatus {
+  emailConfigured: boolean;
+  smsConfigured: boolean;
+  missingEmailVars: string[];
+  missingSmsVars: string[];
 }
 
-interface AttemptTracker {
-  count: number;
-  lockoutUntil: number;
+export interface OwnerSecurityStatus {
+  emailVerified: boolean;
+  phoneVerified: boolean;
+  maskedEmail: string | null;
+  maskedPhone: string | null;
+  emailProviderConfigured: boolean;
+  smsProviderConfigured: boolean;
+  missingEmailVars: string[];
+  missingSmsVars: string[];
+  backupCodesRemaining: number;
 }
 
-const STORAGE_KEY_PREFIX = 'giridhar_lock_';
-const SESSION_UNLOCKED_PREFIX = 'giridhar_unlocked_';
-const OWNER_STORAGE_KEY = 'giridhar_owner_auth';
-const OWNER_SESSION_KEY = 'giridhar_owner_session';
-const MAX_ATTEMPTS = 5;
-const LOCKOUT_MS = 30 * 1000; // 30 seconds
-const PBKDF2_ITERATIONS = 100000;
-
-// In-memory rate limiting tracker
-const attemptMap: Map<string, AttemptTracker> = new Map();
-
-/** Convert BufferSource to Hex */
-function buf2hex(buffer: ArrayBuffer): string {
-  return Array.from(new Uint8Array(buffer))
-    .map((b) => b.toString(16).padStart(2, '0'))
-    .join('');
+export interface SecurityAuditItem {
+  event_type: string;
+  profile_id: string | null;
+  channel: string | null;
+  success: boolean;
+  created_at: string;
 }
 
-/** Convert Hex to Uint8Array */
-function hex2buf(hex: string): Uint8Array {
-  const bytes = new Uint8Array(hex.length / 2);
-  for (let i = 0; i < hex.length; i += 2) {
-    bytes[i / 2] = parseInt(hex.substring(i, i + 2), 16);
-  }
-  return bytes;
+export interface OwnerAuthState {
+  backendConfigured: boolean;
+  missingDatabaseVars?: string[];
+  authenticated: boolean;
+  ownerInitialized: boolean;
+  bootstrapConfigured: boolean;
+  recoveryStatus?: {
+    emailVerified: boolean;
+    phoneVerified: boolean;
+    maskedEmail?: string | null;
+    maskedPhone?: string | null;
+    backupCodesRemaining?: number;
+    backupCodesConfigured?: boolean;
+  };
+  recoveryProviders?: RecoveryProviderStatus;
 }
 
-/** Cryptographic PBKDF2 hash using Web Crypto API */
-async function hashPassword(password: string, salt: Uint8Array, iterations = PBKDF2_ITERATIONS): Promise<string> {
-  const enc = new TextEncoder();
-  const keyMaterial = await crypto.subtle.importKey(
-    'raw',
-    enc.encode(password),
-    { name: 'PBKDF2' },
-    false,
-    ['deriveBits', 'deriveKey']
-  );
+const DEFAULT_STATES: Record<ProfileId, ProfileLockState> = {
+  giridhar: { isLocked: false, hasPassword: false, unlocked: true },
+  recruiter: { isLocked: false, hasPassword: false, unlocked: true },
+  creative: { isLocked: false, hasPassword: false, unlocked: true },
+};
 
-  const key = await crypto.subtle.deriveKey(
-    {
-      name: 'PBKDF2',
-      salt,
-      iterations,
-      hash: 'SHA-256',
-    },
-    keyMaterial,
-    { name: 'HMAC', hash: 'SHA-256', length: 256 },
-    true,
-    ['sign']
-  );
+// In-memory snapshot mirrored strictly from server responses (never authoritative; server enforces every request)
+let serverSnapshot: Record<ProfileId, ProfileLockState> = { ...DEFAULT_STATES };
+let backendConfiguredFlag = true;
+const listeners = new Set<() => void>();
 
-  const rawKey = await crypto.subtle.exportKey('raw', key);
-  return buf2hex(rawKey);
+function notifyListeners() {
+  listeners.forEach((fn) => fn());
 }
 
-/** Read profile lock from local storage */
-function readLock(id: ProfileId): StoredLockData {
-  try {
-    const raw = localStorage.getItem(`${STORAGE_KEY_PREFIX}${id}`);
-    if (raw) return JSON.parse(raw);
-  } catch {
-    /* storage unavailable */
-  }
-  return { isLocked: false };
+export function subscribeLockStates(listener: () => void): () => void {
+  listeners.add(listener);
+  return () => listeners.delete(listener);
 }
 
-/** Write profile lock to local storage */
-function writeLock(id: ProfileId, data: StoredLockData): void {
-  try {
-    localStorage.setItem(`${STORAGE_KEY_PREFIX}${id}`, JSON.stringify(data));
-  } catch {
-    /* storage unavailable */
-  }
+export function isSecurityBackendConfigured(): boolean {
+  return backendConfiguredFlag;
 }
 
-/** Check if profile is currently locked */
 export function getProfileLockState(id: ProfileId): ProfileLockState {
-  const data = readLock(id);
+  return serverSnapshot[id] || DEFAULT_STATES[id];
+}
+
+export function getAllLockStates(): Record<ProfileId, ProfileLockState> {
   return {
-    isLocked: !!data.isLocked && !!data.hashHex,
-    hasPassword: !!data.hashHex,
+    giridhar: { ...serverSnapshot.giridhar },
+    recruiter: { ...serverSnapshot.recruiter },
+    creative: { ...serverSnapshot.creative },
   };
 }
 
-/** Get lock states for all 3 profiles */
-export function getAllLockStates(): Record<ProfileId, ProfileLockState> {
-  const profiles: ProfileId[] = ['giridhar', 'recruiter', 'creative'];
-  const res = {} as Record<ProfileId, ProfileLockState>;
-  profiles.forEach((p) => {
-    res[p] = getProfileLockState(p);
-  });
-  return res;
-}
-
-/** Check if current visitor has already unlocked this profile in active session */
 export function isProfileSessionUnlocked(id: ProfileId): boolean {
   const state = getProfileLockState(id);
-  if (!state.isLocked) return true; // not locked, always allowed
-  try {
-    return sessionStorage.getItem(`${SESSION_UNLOCKED_PREFIX}${id}`) === 'unlocked';
-  } catch {
-    return false;
-  }
+  return !state.isLocked || state.unlocked;
 }
 
-/** Mark profile as unlocked for current visitor session */
-export function markProfileSessionUnlocked(id: ProfileId): void {
+async function apiJson<T>(url: string, init?: RequestInit): Promise<{ status: number; data: T }> {
+  const res = await fetch(url, {
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(init?.headers || {}),
+    },
+    ...init,
+  });
+  let data: T;
   try {
-    sessionStorage.setItem(`${SESSION_UNLOCKED_PREFIX}${id}`, 'unlocked');
+    data = (await res.json()) as T;
   } catch {
-    /* storage unavailable */
+    data = {} as T;
   }
+  return { status: res.status, data };
 }
 
-/** Verify visitor password with cryptographic hashing and rate limiting */
+/** Fetch globally synchronized lock states & current visitor cookie unlock states from server */
+export async function syncProfileLockStates(): Promise<{
+  backendConfigured: boolean;
+  profiles: Record<ProfileId, ProfileLockState>;
+}> {
+  try {
+    const { status, data } = await apiJson<{
+      backendConfigured?: boolean;
+      profiles?: Partial<Record<ProfileId, ProfileLockState>>;
+    }>('/api/profiles/status', { method: 'GET' });
+
+    if (status === 200 && data?.profiles) {
+      backendConfiguredFlag = data.backendConfigured !== false;
+      serverSnapshot = {
+        giridhar: data.profiles.giridhar || DEFAULT_STATES.giridhar,
+        recruiter: data.profiles.recruiter || DEFAULT_STATES.recruiter,
+        creative: data.profiles.creative || DEFAULT_STATES.creative,
+      };
+      notifyListeners();
+      return { backendConfigured: backendConfiguredFlag, profiles: getAllLockStates() };
+    }
+  } catch {
+    /* Network or local Vite dev without API proxy */
+  }
+  return { backendConfigured: backendConfiguredFlag, profiles: getAllLockStates() };
+}
+
+/** Verify server-side access authorization before rendering any profile content (protects direct URLs) */
+export async function verifyServerProfileAccess(
+  profileId: ProfileId
+): Promise<{ authorized: boolean; locked: boolean; error?: string }> {
+  try {
+    const { status, data } = await apiJson<{
+      authorized?: boolean;
+      locked?: boolean;
+      error?: string;
+    }>(`/api/profile-content?profileId=${encodeURIComponent(profileId)}`, { method: 'GET' });
+
+    if (status === 401 || data.authorized === false) {
+      serverSnapshot = {
+        ...serverSnapshot,
+        [profileId]: {
+          ...serverSnapshot[profileId],
+          isLocked: true,
+          unlocked: false,
+        },
+      };
+      notifyListeners();
+      return { authorized: false, locked: true, error: data.error };
+    }
+
+    if (status === 200 && data.authorized) {
+      serverSnapshot = {
+        ...serverSnapshot,
+        [profileId]: {
+          ...serverSnapshot[profileId],
+          isLocked: Boolean(data.locked),
+          unlocked: true,
+        },
+      };
+      notifyListeners();
+      return { authorized: true, locked: Boolean(data.locked) };
+    }
+  } catch {
+    /* Fallback only if static local preview without API functions */
+  }
+
+  const cached = getProfileLockState(profileId);
+  return { authorized: !cached.isLocked || cached.unlocked, locked: cached.isLocked };
+}
+
+/** Verify visitor password on server via bcrypt and receive HTTP-only session cookie */
 export async function unlockProfileWithPassword(
-  id: ProfileId,
-  passwordInput: string
+  profileId: ProfileId,
+  password: string
 ): Promise<{
   success: boolean;
   error?: string;
   remainingAttempts?: number;
   lockoutSeconds?: number;
 }> {
-  const now = Date.now();
-  const tracker = attemptMap.get(id) || { count: 0, lockoutUntil: 0 };
+  const { data } = await apiJson<{
+    success?: boolean;
+    error?: string;
+    remainingAttempts?: number;
+    lockoutSeconds?: number;
+  }>('/api/profiles/unlock', {
+    method: 'POST',
+    body: JSON.stringify({ profileId, password }),
+  });
 
-  // Check active lockout
-  if (tracker.lockoutUntil > now) {
-    const remainingSec = Math.ceil((tracker.lockoutUntil - now) / 1000);
-    return {
-      success: false,
-      error: `Too many failed attempts. Please wait ${remainingSec}s before retrying.`,
-      lockoutSeconds: remainingSec,
-    };
-  }
-
-  const data = readLock(id);
-  if (!data.isLocked || !data.hashHex || !data.saltHex) {
-    // Not locked
-    markProfileSessionUnlocked(id);
+  if (data.success) {
+    await syncProfileLockStates();
     return { success: true };
   }
 
-  const salt = hex2buf(data.saltHex);
-  const iterations = data.iterations || PBKDF2_ITERATIONS;
-  const computedHash = await hashPassword(passwordInput, salt, iterations);
-
-  if (computedHash === data.hashHex) {
-    // Success: reset rate limit & record session unlock
-    attemptMap.delete(id);
-    markProfileSessionUnlocked(id);
-    return { success: true };
-  }
-
-  // Failure: increment attempt count
-  tracker.count += 1;
-  if (tracker.count >= MAX_ATTEMPTS) {
-    tracker.lockoutUntil = now + LOCKOUT_MS;
-    tracker.count = 0;
-    attemptMap.set(id, tracker);
-    return {
-      success: false,
-      error: `Incorrect password. Locked out for 30 seconds due to repeated failed attempts.`,
-      lockoutSeconds: 30,
-    };
-  }
-
-  attemptMap.set(id, tracker);
-  const remaining = MAX_ATTEMPTS - tracker.count;
   return {
     success: false,
-    error: `Incorrect password. ${remaining} attempt${remaining === 1 ? '' : 's'} remaining.`,
-    remainingAttempts: remaining,
+    error: data.error || 'Incorrect password. Access denied.',
+    remainingAttempts: data.remainingAttempts,
+    lockoutSeconds: data.lockoutSeconds,
   };
 }
 
-/**
- * Owner Management: Set or remove password and toggle lock status.
- * Can be called ONLY after owner authentication.
- */
-export async function setProfileLock(
-  id: ProfileId,
-  isLocked: boolean,
-  newPassword?: string
-): Promise<{ success: boolean; error?: string }> {
-  const current = readLock(id);
+/** Owner Auth: Check server-side owner session & infrastructure readiness */
+export async function fetchOwnerAuthState(): Promise<OwnerAuthState> {
+  const { data } = await apiJson<OwnerAuthState>('/api/owner/auth', { method: 'GET' });
+  return {
+    backendConfigured: Boolean(data.backendConfigured),
+    missingDatabaseVars: data.missingDatabaseVars || [],
+    authenticated: Boolean(data.authenticated),
+    ownerInitialized: Boolean(data.ownerInitialized),
+    bootstrapConfigured: Boolean(data.bootstrapConfigured),
+    recoveryStatus: data.recoveryStatus,
+    recoveryProviders: data.recoveryProviders,
+  };
+}
 
-  if (newPassword !== undefined && newPassword.trim().length > 0) {
-    if (newPassword.trim().length < 4) {
-      return { success: false, error: 'Password must be at least 4 characters long.' };
-    }
-    const salt = crypto.getRandomValues(new Uint8Array(16));
-    const saltHex = buf2hex(salt.buffer);
-    const hashHex = await hashPassword(newPassword.trim(), salt);
-    writeLock(id, {
-      isLocked,
-      saltHex,
-      hashHex,
-      iterations: PBKDF2_ITERATIONS,
-    });
-    return { success: true };
-  }
-
-  // Toggling lock with existing password
-  if (isLocked && !current.hashHex) {
-    return {
-      success: false,
-      error: 'Cannot lock profile without setting a password first.',
-    };
-  }
-
-  writeLock(id, {
-    ...current,
-    isLocked,
+/** Owner Auth: Initialize owner security (requires OWNER_BOOTSTRAP_SECRET) or sign in */
+export async function authenticateOwnerOnServer(params: {
+  action: 'initialize' | 'login';
+  password: string;
+  bootstrapSecret?: string;
+}): Promise<{ success: boolean; error?: string; lockoutSeconds?: number }> {
+  const { data } = await apiJson<{
+    success?: boolean;
+    error?: string;
+    lockoutSeconds?: number;
+  }>('/api/owner/auth', {
+    method: 'POST',
+    body: JSON.stringify(params),
   });
-  return { success: true };
+  return {
+    success: Boolean(data.success),
+    error: data.error,
+    lockoutSeconds: data.lockoutSeconds,
+  };
 }
 
-/** Owner Management: Completely remove password and unlock profile */
-export function removeProfilePassword(id: ProfileId): { success: boolean } {
-  try {
-    localStorage.removeItem(`${STORAGE_KEY_PREFIX}${id}`);
-    sessionStorage.removeItem(`${SESSION_UNLOCKED_PREFIX}${id}`);
-  } catch {
-    /* storage unavailable */
-  }
-  return { success: true };
+/** Owner Auth: Sign out & revoke HTTP-only owner session on server */
+export async function logoutOwnerOnServer(): Promise<void> {
+  await apiJson('/api/owner/auth', { method: 'DELETE' });
 }
 
-/** Owner Authentication: Check if owner is signed in for this session */
-export function isOwnerAuthenticated(): boolean {
-  try {
-    return sessionStorage.getItem(OWNER_SESSION_KEY) === 'authenticated';
-  } catch {
-    return false;
+/** Owner Dashboard: Load lock states, security status & recent audit events */
+export async function fetchOwnerDashboard(): Promise<{
+  profiles: Record<ProfileId, ProfileLockState>;
+  securityStatus: OwnerSecurityStatus;
+  recentAudit: SecurityAuditItem[];
+} | null> {
+  const { status, data } = await apiJson<{
+    profiles?: Record<ProfileId, ProfileLockState>;
+    securityStatus?: OwnerSecurityStatus;
+    recentAudit?: SecurityAuditItem[];
+  }>('/api/owner/locks', { method: 'GET' });
+
+  if (status !== 200 || !data.profiles || !data.securityStatus) {
+    return null;
   }
+
+  await syncProfileLockStates();
+  return {
+    profiles: data.profiles,
+    securityStatus: data.securityStatus,
+    recentAudit: data.recentAudit || [],
+  };
 }
 
-/** Owner Authentication: Check if an owner passphrase has been initialized */
-export function isOwnerPassphraseInitialized(): boolean {
-  try {
-    return !!localStorage.getItem(OWNER_STORAGE_KEY);
-  } catch {
-    return false;
+/** Owner Action: Set/change password, toggle lock, remove password, or generate backup codes */
+export async function mutateOwnerLock(payload: {
+  action: 'set_password' | 'toggle_lock' | 'remove_password' | 'generate_backup_codes';
+  profileId?: ProfileId;
+  password?: string;
+  isLocked?: boolean;
+}): Promise<{ success: boolean; error?: string; backupCodes?: string[]; message?: string }> {
+  const { data } = await apiJson<{
+    success?: boolean;
+    error?: string;
+    backupCodes?: string[];
+    message?: string;
+  }>('/api/owner/locks', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+
+  if (data.success) {
+    await syncProfileLockStates();
   }
+
+  return {
+    success: Boolean(data.success),
+    error: data.error,
+    backupCodes: data.backupCodes,
+    message: data.message,
+  };
 }
 
-/** Owner Authentication: Initialize or set owner master passphrase */
-export async function initializeOwnerPassphrase(passphrase: string): Promise<{ success: boolean; error?: string }> {
-  if (passphrase.trim().length < 6) {
-    return { success: false, error: 'Owner passphrase must be at least 6 characters.' };
-  }
-  const salt = crypto.getRandomValues(new Uint8Array(16));
-  const saltHex = buf2hex(salt.buffer);
-  const hashHex = await hashPassword(passphrase.trim(), salt);
-  try {
-    localStorage.setItem(OWNER_STORAGE_KEY, JSON.stringify({ saltHex, hashHex, iterations: PBKDF2_ITERATIONS }));
-    sessionStorage.setItem(OWNER_SESSION_KEY, 'authenticated');
-    return { success: true };
-  } catch {
-    return { success: false, error: 'Storage access failed.' };
-  }
-}
+/** Owner OTP & Backup Code Recovery API */
+export async function callOwnerRecovery(payload: {
+  action:
+    | 'request_channel_verification'
+    | 'confirm_channel_verification'
+    | 'request_reset_otp'
+    | 'complete_reset_with_otp'
+    | 'complete_reset_with_backup_code';
+  channel?: 'email' | 'sms';
+  targetProfileId?: ProfileId | 'owner';
+  otp?: string;
+  newPassword?: string;
+  backupCode?: string;
+}): Promise<{
+  success: boolean;
+  error?: string;
+  message?: string;
+  cooldownSeconds?: number;
+  missingVars?: string[];
+  backupCodesRemaining?: number;
+}> {
+  const { data } = await apiJson<{
+    success?: boolean;
+    error?: string;
+    message?: string;
+    cooldownSeconds?: number;
+    missingVars?: string[];
+    backupCodesRemaining?: number;
+  }>('/api/owner/recovery', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
 
-/** Owner Authentication: Authenticate owner with master passphrase */
-export async function authenticateOwner(passphrase: string): Promise<{ success: boolean; error?: string }> {
-  try {
-    const raw = localStorage.getItem(OWNER_STORAGE_KEY);
-    if (!raw) {
-      return { success: false, error: 'Owner passphrase not initialized yet.' };
-    }
-    const data = JSON.parse(raw);
-    const salt = hex2buf(data.saltHex);
-    const hashHex = await hashPassword(passphrase.trim(), salt, data.iterations || PBKDF2_ITERATIONS);
-
-    if (hashHex === data.hashHex) {
-      sessionStorage.setItem(OWNER_SESSION_KEY, 'authenticated');
-      return { success: true };
-    }
-    return { success: false, error: 'Invalid owner passphrase.' };
-  } catch {
-    return { success: false, error: 'Authentication failed.' };
+  if (data.success) {
+    await syncProfileLockStates();
   }
-}
 
-/** Owner Authentication: Log out owner */
-export function logoutOwner(): void {
-  try {
-    sessionStorage.removeItem(OWNER_SESSION_KEY);
-  } catch {
-    /* storage unavailable */
-  }
+  return {
+    success: Boolean(data.success),
+    error: data.error,
+    message: data.message,
+    cooldownSeconds: data.cooldownSeconds,
+    missingVars: data.missingVars,
+    backupCodesRemaining: data.backupCodesRemaining,
+  };
 }

@@ -13,6 +13,8 @@
     "images": "node scripts/build-images.mjs"
   },
   "dependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "bcryptjs": "^3.0.3",
     "framer-motion": "11.18.2",
     "lenis": "1.1.20",
     "react": "18.3.1",

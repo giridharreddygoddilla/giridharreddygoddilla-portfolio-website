@@ -24,6 +24,14 @@ export default function PasswordGateModal({
 
   const profile = viewerProfiles.find((p) => p.id === profileId);
 
+  // Reset form state whenever target profile changes
+  useEffect(() => {
+    setPassword('');
+    setError(null);
+    setLockoutSec(0);
+    setShowPassword(false);
+  }, [profileId]);
+
   // Lockout countdown timer
   useEffect(() => {
     if (lockoutSec <= 0) return;

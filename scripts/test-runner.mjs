@@ -104,23 +104,30 @@ assert(
   'Standalone C shortcut is removed from NavigationGuideModal.tsx'
 );
 
-// TEST 7: Lock Manager & Rate Limiting Check
-console.log('\n7. Checking Lock Manager & Security Architecture...');
+// TEST 7: Server-Side Security Architecture, Bcrypt, HTTP-Only Cookies & OTP Recovery
+console.log('\n7. Checking Server-Side Security & OTP Recovery Architecture...');
 const lockService = fs.readFileSync(path.join(rootDir, 'src', 'services', 'lockManager.ts'), 'utf-8');
-const supabaseMigration = fs.readFileSync(path.join(rootDir, 'supabase', 'migrations', '20261101_profile_locks.sql'), 'utf-8');
+const cryptoLib = fs.readFileSync(path.join(rootDir, 'api', '_lib', 'crypto.mjs'), 'utf-8');
+const securityMigration = fs.readFileSync(path.join(rootDir, 'supabase', 'migrations', '20261118_security_system.sql'), 'utf-8');
 
 assert(
-  lockService.includes('PBKDF2') && lockService.includes('100000'),
-  'Lock Manager uses Web Crypto PBKDF2 with SHA-256 and 100,000 iterations'
+  !lockService.includes('localStorage.') && !lockService.includes('sessionStorage.') && lockService.includes("credentials: 'include'"),
+  'Frontend lock client uses server API + HTTP-only cookies (zero localStorage/sessionStorage security)'
 );
 assert(
-  lockService.includes('MAX_ATTEMPTS') && lockService.includes('LOCKOUT_MS'),
-  'Lock Manager enforces 5-attempt rate limiting and 30-second lockout delay'
+  cryptoLib.includes('bcryptjs') && cryptoLib.includes('HttpOnly') && cryptoLib.includes('BCRYPT_ROUNDS = 12'),
+  'Server security uses bcrypt (cost 12) password hashing and HttpOnly cookies'
 );
 assert(
-  supabaseMigration.includes('SECURITY DEFINER') && supabaseMigration.includes('verify_profile_password'),
-  'Supabase SQL migration provides server-side verification via pgcrypto'
+  securityMigration.includes('ENABLE ROW LEVEL SECURITY') && securityMigration.includes('REVOKE ALL ON public.profile_locks FROM anon'),
+  'Supabase migration enforces strict RLS with zero direct client access to hashes/sessions/OTPs'
 );
+try {
+  execSync('node scripts/test-security-api.mjs', { cwd: rootDir, stdio: 'pipe' });
+  assert(true, 'Server-side security & OTP integration suite passed (14 / 14 end-to-end checks)');
+} catch (e) {
+  assert(false, `Server-side security integration suite failed: ${e.stderr?.toString() || e.message}`);
+}
 
 // TEST 8: Recruiter Profile Reversed Two-Column Layout, Brand Logos & Side-by-Side Resume Buttons
 console.log('\n8. Checking Recruiter Profile Layout, Brand Logos & Education Logos...');

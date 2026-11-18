@@ -6,35 +6,36 @@ import OpeningSequence from './components/OpeningSequence';
 import ProfileSelector from './components/ProfileSelector';
 import Navbar from './components/Navbar';
 import type { PageId } from './components/HamburgerMenu';
-import Hero from './components/Hero';
-import ContinueWatching from './components/ContinueWatching';
-import Scene from './components/Scene';
-import About from './components/About';
-import PortraitExperience from './components/PortraitExperience';
-import Seasons from './components/Seasons';
-import Originals from './components/Originals';
-import TopPicks from './components/TopPicks';
-import Skills from './components/Skills';
-import Achievements from './components/Achievements';
-import ResumeSection from './components/ResumeViewer';
-import RecruiterDossier from './components/RecruiterDossier';
-import CreativePage from './components/CreativePage';
 import NavigationGuideModal from './components/NavigationGuideModal';
 import PasswordGateModal from './components/PasswordGateModal';
 import ProfileLockManagerModal from './components/ProfileLockManagerModal';
-import FinalCTA from './components/FinalCTA';
 import { EASE } from './components/fx';
 import { isSoundEnabled, playClick, setSoundEnabled } from './hooks/useSoundFX';
-import { isProfileSessionUnlocked } from './services/lockManager';
+import {
+  syncProfileLockStates,
+  verifyServerProfileAccess,
+} from './services/lockManager';
 
-// Overlays are loaded on demand
+// Profile experiences & overlays are code-split and loaded ONLY after server authorization
+const Hero = lazy(() => import('./components/Hero'));
+const ContinueWatching = lazy(() => import('./components/ContinueWatching'));
+const Scene = lazy(() => import('./components/Scene'));
+const About = lazy(() => import('./components/About'));
+const PortraitExperience = lazy(() => import('./components/PortraitExperience'));
+const Seasons = lazy(() => import('./components/Seasons'));
+const Originals = lazy(() => import('./components/Originals'));
+const TopPicks = lazy(() => import('./components/TopPicks'));
+const Skills = lazy(() => import('./components/Skills'));
+const Achievements = lazy(() => import('./components/Achievements'));
+const ResumeSection = lazy(() => import('./components/ResumeViewer'));
+const FinalCTA = lazy(() => import('./components/FinalCTA'));
+const RecruiterDossier = lazy(() => import('./components/RecruiterDossier'));
+const CreativePage = lazy(() => import('./components/CreativePage'));
 const PlayIntro = lazy(() => import('./components/PlayIntro'));
 const ProjectModal = lazy(() => import('./components/ProjectModal'));
 const ResumeModal = lazy(() => import('./components/ResumeModal'));
 
 type Stage = 'opening' | 'profiles' | 'home';
-
-const STORAGE_KEY = 'giridhar-series-profile';
 
 function profileToPage(profileId: ProfileId): PageId {
   if (profileId === 'recruiter') return 'recruiter';
@@ -48,28 +49,16 @@ function pageToProfile(pageId: PageId): ProfileId {
   return 'giridhar';
 }
 
-function getInitialStage(): Stage {
+function getHashTargetProfile(): ProfileId | null {
   try {
-    const hash = window.location.hash.replace('#', '');
-    if (['personal', 'series', 'home', 'professional', 'recruiter', 'creative'].includes(hash)) {
-      return 'home';
-    }
-  } catch {
-    /* window unavailable */
-  }
-  // Root URL immediately displays the three-profile selection screen
-  return 'profiles';
-}
-
-function getInitialProfile(): ProfileId {
-  try {
-    const hash = window.location.hash.replace('#', '');
+    const hash = window.location.hash.replace('#', '').toLowerCase();
     if (hash === 'professional' || hash === 'recruiter') return 'recruiter';
     if (hash === 'creative') return 'creative';
+    if (hash === 'personal' || hash === 'series' || hash === 'home') return 'giridhar';
   } catch {
     /* window unavailable */
   }
-  return 'giridhar';
+  return null;
 }
 
 export default function App() {
@@ -81,9 +70,11 @@ export default function App() {
 }
 
 function Series() {
-  const [stage, setStage] = useState<Stage>(getInitialStage);
-  const [profileId, setProfileId] = useState<ProfileId>(getInitialProfile);
-  const [activePage, setActivePage] = useState<PageId>(profileToPage(getInitialProfile()));
+  // Always start on 'profiles' until server-side access check authorizes any direct hash target
+  const [stage, setStage] = useState<Stage>('profiles');
+  const [profileId, setProfileId] = useState<ProfileId>('giridhar');
+  const [activePage, setActivePage] = useState<PageId>('home');
+  const [checkingAccess, setCheckingAccess] = useState<boolean>(() => Boolean(getHashTargetProfile()));
 
   const [playing, setPlaying] = useState(false);
   const [project, setProject] = useState<Project | null>(null);
@@ -112,13 +103,51 @@ function Series() {
     if (next) playClick();
   }, [sound]);
 
-  // Navigate between the 4 primary experiences with history support
+  // Synchronize global lock states from persistent backend + protect direct URL loads
+  useEffect(() => {
+    let active = true;
+
+    const initSecurity = async () => {
+      await syncProfileLockStates();
+      const hashTarget = getHashTargetProfile();
+      if (!active) return;
+
+      if (hashTarget) {
+        const access = await verifyServerProfileAccess(hashTarget);
+        if (!active) return;
+
+        if (access.authorized) {
+          setProfileId(hashTarget);
+          setActivePage(profileToPage(hashTarget));
+          setStage('home');
+        } else {
+          // Direct URL to a locked profile cannot bypass protection
+          setStage('profiles');
+          setPendingLockedProfile(hashTarget);
+        }
+      }
+      setCheckingAccess(false);
+    };
+
+    initSecurity();
+
+    const handleFocusSync = () => {
+      syncProfileLockStates();
+    };
+    window.addEventListener('focus', handleFocusSync);
+    return () => {
+      active = false;
+      window.removeEventListener('focus', handleFocusSync);
+    };
+  }, []);
+
+  // Server-enforced navigation between the 3 primary profiles with history support
   const handleNavigate = useCallback(
-    (page: PageId, targetId?: string, pushHistory = true) => {
+    async (page: PageId, targetId?: string, pushHistory = true) => {
       const pId = pageToProfile(page);
 
-      // Check if target profile is locked
-      if (!isProfileSessionUnlocked(pId)) {
+      const access = await verifyServerProfileAccess(pId);
+      if (!access.authorized) {
         setPendingLockedProfile(pId);
         return;
       }
@@ -127,13 +156,12 @@ function Series() {
       setProfileId(pId);
 
       try {
-        sessionStorage.setItem(STORAGE_KEY, pId);
         if (pushHistory) {
           const hash = page === 'home' ? 'personal' : page === 'recruiter' ? 'professional' : page;
           window.history.pushState({ page, pId }, '', `#${hash}`);
         }
       } catch {
-        /* storage/history unavailable */
+        /* history unavailable */
       }
 
       if (stage !== 'home') {
@@ -146,7 +174,7 @@ function Series() {
           if (el) {
             el.scrollIntoView({ behavior: 'smooth' });
           }
-        }, 100);
+        }, 120);
       } else {
         window.scrollTo({ top: 0, behavior: 'instant' });
       }
@@ -154,31 +182,28 @@ function Series() {
     [stage],
   );
 
-  // Profile picker with lock check
-  const attemptPickProfile = useCallback(
-    (id: ProfileId) => {
-      if (!isProfileSessionUnlocked(id)) {
-        setPendingLockedProfile(id);
-        return;
-      }
+  // Profile picker with server-side lock check
+  const attemptPickProfile = useCallback(async (id: ProfileId) => {
+    const access = await verifyServerProfileAccess(id);
+    if (!access.authorized) {
+      setPendingLockedProfile(id);
+      return;
+    }
 
-      setProfileId(id);
-      const targetPage = profileToPage(id);
-      setActivePage(targetPage);
+    setProfileId(id);
+    const targetPage = profileToPage(id);
+    setActivePage(targetPage);
 
-      try {
-        sessionStorage.setItem(STORAGE_KEY, id);
-        const hash = targetPage === 'home' ? 'personal' : targetPage === 'recruiter' ? 'professional' : targetPage;
-        window.history.pushState({ page: targetPage, id }, '', `#${hash}`);
-      } catch {
-        /* storage unavailable */
-      }
+    try {
+      const hash = targetPage === 'home' ? 'personal' : targetPage === 'recruiter' ? 'professional' : targetPage;
+      window.history.pushState({ page: targetPage, id }, '', `#${hash}`);
+    } catch {
+      /* history unavailable */
+    }
 
-      window.scrollTo(0, 0);
-      setStage('home');
-    },
-    [],
-  );
+    window.scrollTo(0, 0);
+    setStage('home');
+  }, []);
 
   // Return to Profile Chooser
   const openProfileChooser = useCallback(() => {
@@ -188,23 +213,19 @@ function Series() {
       /* history unavailable */
     }
     window.scrollTo(0, 0);
+    syncProfileLockStates();
     setStage('profiles');
   }, []);
 
-  // Listen to browser Back / Forward buttons (popstate)
+  // Listen to browser Back / Forward buttons (popstate) with server verification
   useEffect(() => {
     const handlePopState = () => {
-      const hash = window.location.hash.replace('#', '');
-      if (!hash || hash === 'profiles') {
+      const target = getHashTargetProfile();
+      if (!target) {
+        syncProfileLockStates();
         setStage('profiles');
-      } else if (['personal', 'series', 'home', 'professional', 'recruiter', 'creative'].includes(hash)) {
-        const targetPage: PageId =
-          hash === 'professional' || hash === 'recruiter'
-            ? 'recruiter'
-            : hash === 'creative'
-            ? 'creative'
-            : 'home';
-        handleNavigate(targetPage, undefined, false);
+      } else {
+        handleNavigate(profileToPage(target), undefined, false);
       }
     };
     window.addEventListener('popstate', handlePopState);
@@ -267,16 +288,16 @@ function Series() {
     <LayoutGroup>
       <div className="grain" aria-hidden />
 
-      {/* Opening sequence is optional; can be triggered explicitly via Watch Intro */}
+      {/* Opening sequence is optional; triggered explicitly via Watch Cinematic Intro */}
       <AnimatePresence>
         {stage === 'opening' && (
           <OpeningSequence key="opening" onDone={() => setStage('profiles')} />
         )}
       </AnimatePresence>
 
-      {/* Root First Screen: All Four Profiles Screen */}
+      {/* Root First Screen: Three-Profile Selector (suppressed briefly only while verifying a direct hash URL) */}
       <AnimatePresence>
-        {stage === 'profiles' && (
+        {stage === 'profiles' && !checkingAccess && (
           <ProfileSelector
             key="profiles"
             onPick={attemptPickProfile}
@@ -286,14 +307,13 @@ function Series() {
         )}
       </AnimatePresence>
 
-      {/* Main Experience View */}
+      {/* Main Experience View — Mounted & Code-Split ONLY AFTER Server Authorization */}
       {stage === 'home' && (
         <motion.div
           initial={{ opacity: 0, scale: 1.02, filter: 'blur(8px)' }}
           animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
           transition={{ duration: 0.8, ease: EASE }}
         >
-          {/* Persistent Navbar across all pages and scrolls */}
           <Navbar
             activePage={activePage}
             onNavigate={handleNavigate}
@@ -306,50 +326,58 @@ function Series() {
             onOpenProfileChooser={openProfileChooser}
           />
 
-          {/* Page 1: Cinematic Series Home */}
-          {activePage === 'home' && (
-            <main>
-              <Hero
-                key={`hero-${profileId}`}
-                onPlay={() => setPlaying(true)}
-                onResume={() => setResumeOpen(true)}
-                profileId={profileId}
-                onSwitchToRecruiter={() => handleNavigate('recruiter')}
-              />
-              <ContinueWatching order={order} />
-              {order.map((id) => (
-                <Scene key={id} id={id} className={id === 'originals' ? '!py-0 sm:!py-0' : ''}>
-                  {sections[id]}
-                </Scene>
-              ))}
-              <FinalCTA
-                onReplay={() => setStage('opening')}
-                onSwitchToRecruiter={() => handleNavigate('recruiter')}
-              />
-            </main>
-          )}
+          <Suspense
+            fallback={
+              <div className="min-h-screen bg-[#08090D] flex items-center justify-center text-xs font-mono text-white/40">
+                Loading experience...
+              </div>
+            }
+          >
+            {/* Profile 1: PERSONAL */}
+            {activePage === 'home' && (
+              <main>
+                <Hero
+                  key={`hero-${profileId}`}
+                  onPlay={() => setPlaying(true)}
+                  onResume={() => setResumeOpen(true)}
+                  profileId={profileId}
+                  onSwitchToRecruiter={() => handleNavigate('recruiter')}
+                />
+                <ContinueWatching order={order} />
+                {order.map((id) => (
+                  <Scene key={id} id={id} className={id === 'originals' ? '!py-0 sm:!py-0' : ''}>
+                    {sections[id]}
+                  </Scene>
+                ))}
+                <FinalCTA
+                  onReplay={() => setStage('opening')}
+                  onSwitchToRecruiter={() => handleNavigate('recruiter')}
+                />
+              </main>
+            )}
 
-          {/* Page 2: Dedicated Creative Page (Manifesto, Art & Storytelling - No Education) */}
-          {activePage === 'creative' && (
-            <CreativePage
-              onSelectProject={setProject}
-              onNavigateHome={() => handleNavigate('home')}
-              onNavigateProfessional={() => handleNavigate('recruiter')}
-            />
-          )}
+            {/* Profile 2: PROFESSIONAL */}
+            {activePage === 'recruiter' && (
+              <RecruiterDossier
+                onSelectProject={setProject}
+                onOpenResumeModal={() => setResumeOpen(true)}
+                onSwitchToCinematic={() => handleNavigate('home')}
+              />
+            )}
 
-          {/* Page 3: Dedicated Professional Profile Experience */}
-          {activePage === 'recruiter' && (
-            <RecruiterDossier
-              onSelectProject={setProject}
-              onOpenResumeModal={() => setResumeOpen(true)}
-              onSwitchToCinematic={() => handleNavigate('home')}
-            />
-          )}
+            {/* Profile 3: CREATIVE */}
+            {activePage === 'creative' && (
+              <CreativePage
+                onSelectProject={setProject}
+                onNavigateHome={() => handleNavigate('home')}
+                onNavigateProfessional={() => handleNavigate('recruiter')}
+              />
+            )}
+          </Suspense>
         </motion.div>
       )}
 
-      {/* Visitor Password Gate for Locked Profiles */}
+      {/* Visitor Password Gate for Server-Locked Profiles */}
       <PasswordGateModal
         profileId={pendingLockedProfile}
         onSuccess={(unlockedId) => {
@@ -361,13 +389,13 @@ function Series() {
         }}
       />
 
-      {/* Owner Profile Lock Manager Modal */}
+      {/* Owner-Only Security Manager Modal */}
       <ProfileLockManagerModal
         isOpen={lockManagerOpen}
         onClose={() => setLockManagerOpen(false)}
         onLockStateChange={() => {
-          // Trigger re-render to reflect updated lock badges
-          setToast('Lock configuration saved successfully.');
+          syncProfileLockStates();
+          setToast('Security configuration synchronized.');
         }}
       />
 
