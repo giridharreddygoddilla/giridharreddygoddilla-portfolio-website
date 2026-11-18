@@ -130,10 +130,10 @@ export default function RecruiterDossier({
 
             {/* RIGHT COLUMN: 1. Official Brand Logos  2. Original Photograph  3. Download + Preview Resume */}
             <div className="flex flex-col items-center w-full">
-              {/* Official LinkedIn & GitHub Brand Logos — exact 0.4mm (~1.5px) gap, +10% larger (58px container, 33px SVG) */}
+              {/* Official LinkedIn & GitHub Brand Logos — exact 0.3mm (~1.13px) gap, +10% larger (58px container, 33px SVG) */}
               <div
                 className="flex items-center justify-center mb-4"
-                style={{ gap: '0.4mm' }}
+                style={{ gap: '0.3mm' }}
               >
                 <a
                   href={profile.links.linkedin}

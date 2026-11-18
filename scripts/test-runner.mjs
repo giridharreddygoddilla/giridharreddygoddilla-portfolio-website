@@ -131,14 +131,14 @@ assert(
   'Fixed/sticky top recruiter banner is completely removed'
 );
 assert(
-  recruiterTsx.includes("gap: '0.4mm'") &&
+  recruiterTsx.includes("gap: '0.3mm'") &&
     recruiterTsx.includes('h-[58px] w-[58px]') &&
     recruiterTsx.includes('h-[33px] w-[33px]') &&
     recruiterTsx.includes('fill="#0A66C2"') &&
     recruiterTsx.includes('aria-label="LinkedIn') &&
     recruiterTsx.includes('aria-label="GitHub') &&
     recruiterTsx.includes('rel="noopener noreferrer"'),
-  'Official LinkedIn & GitHub brand logos are +10% larger (58px/33px) with exact 0.4mm (~1.5px) gap and safe links'
+  'Official LinkedIn & GitHub brand logos are +10% larger (58px/33px) with exact 0.3mm gap and safe links'
 );
 assert(
   recruiterTsx.includes('https://giridharreddygoddilla.vercel.app/assets/Giridhar_Reddy_Goddilla_Resume_ATS.pdf') &&
