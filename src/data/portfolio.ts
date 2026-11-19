@@ -29,8 +29,8 @@ export const profile = {
   resumePremiumPdf: '/assets/Giridhar_Reddy_Goddilla_Resume_Premium.pdf',
   resumeDocx: '/assets/Giridhar_Reddy_Goddilla_Resume.docx',
   portrait: {
-    src: '/assets/character/hero-portrait.webp',
-    alt: 'Giridhar Reddy Goddilla - Character Illustration',
+    src: '/assets/character/personal-seaside-coffee.webp',
+    alt: 'Giridhar Reddy Goddilla - Personal Seaside Night Under Stars',
   },
   recruiterPhoto: {
     src: '/assets/giridhar-original-portrait.jpg',
@@ -46,14 +46,14 @@ export const profile = {
 
 export const characterAssets = {
   thumbnail: {
-    src: '/assets/character/walking-city.webp',
+    src: '/assets/character/personal-seaside-coffee.webp',
     alt: 'Giridhar Reddy - Character Thumbnail',
   },
   hero: {
-    src: '/assets/character/hero-portrait.webp',
-    alt: 'Giridhar Reddy - Signature Hero Portrait (Anime Aesthetic)',
-    label: 'Signature Hero Portrait',
-    mood: 'Warm atmospheric studio lighting, wavy hair, glasses, confident subtle smile',
+    src: '/assets/character/personal-seaside-coffee.webp',
+    alt: 'Giridhar Reddy - Seaside Night with Coffee Under Moon and Stars',
+    label: 'Personal Seaside Ocean Night',
+    mood: 'Man on seaside rocks viewed from behind, drinking coffee, wearing headphones, watching ocean beneath starry sky',
   },
   developer: {
     src: '/assets/character/developer-workspace.webp',
@@ -62,10 +62,10 @@ export const characterAssets = {
     mood: 'Multi-monitor setup, machine learning pipelines, dark navy shirt, blue monitor glow',
   },
   walking: {
-    src: '/assets/character/walking-city.webp',
-    alt: 'Giridhar Reddy - Walking in Modern City',
-    label: 'Cinematic Journey',
-    mood: 'Full-body shot walking in modern architectural city, golden hour lighting',
+    src: '/assets/character/creative-studio-vision.webp',
+    alt: 'Giridhar Reddy - Creative Studio Innovation Workspace',
+    label: 'Creative Studio Vision',
+    mood: 'Man in creative studio viewed from behind, surrounded by paintings, AI monitor, books, cricket, and personal passions',
   },
   confident: {
     src: '/assets/character/confident-arms-crossed.webp',

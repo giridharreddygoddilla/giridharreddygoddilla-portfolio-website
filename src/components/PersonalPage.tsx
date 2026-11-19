@@ -174,18 +174,18 @@ export default function PersonalPage({
             ROOTED IN TRADITION. BUILT BY PASSION. DRIVEN BY PURPOSE.
           </p>
 
-          {/* Signature Character Visual */}
-          <div className="relative mx-auto w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 rounded-3xl overflow-hidden ring-2 ring-[#E50920]/40 shadow-2xl shadow-[#E50920]/20 mb-10 bg-[#11131A]">
+          {/* Signature Personal Visual — Seaside Night With Coffee, Headphones & Starry Sky */}
+          <div className="relative mx-auto w-full max-w-sm sm:max-w-md md:max-w-lg aspect-[4/3] rounded-3xl overflow-hidden ring-2 ring-[#E50920]/40 shadow-2xl shadow-[#E50920]/25 mb-10 bg-[#11131A] group">
             <img
               src={characterAssets.hero.src}
-              alt="Giridhar Reddy Goddilla - Personal Character Portrait"
-              className="w-full h-full object-cover object-top"
+              alt="Giridhar Reddy Goddilla - Seaside Night With Coffee Under Moon and Stars"
+              className="w-full h-full object-cover object-center group-hover:scale-102 transition duration-700"
               loading="eager"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-            <div className="absolute bottom-2 inset-x-0 text-center">
-              <span className="font-mono text-[10px] tracking-wider uppercase text-white/80 bg-black/60 px-2 py-0.5 rounded-full border border-white/10">
-                GIRIDHAR REDDY GODDILLA
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+            <div className="absolute bottom-3 inset-x-0 text-center pointer-events-none">
+              <span className="font-mono text-[10px] tracking-wider uppercase text-white/90 bg-black/70 px-3 py-1 rounded-full border border-white/15 backdrop-blur-sm">
+                GIRIDHAR REDDY GODDILLA • PERSONAL
               </span>
             </div>
           </div>

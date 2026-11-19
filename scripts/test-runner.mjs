@@ -323,6 +323,24 @@ try {
   assert(false, `Regression check failed: ${e.message}`);
 }
 
+// TEST 14: Personal & Creative Profile Image Assets Verification
+console.log('\n14. Checking Personal & Creative Profile Image Assets...');
+assert(
+  fs.existsSync(path.join(assetsDir, 'character', 'personal-seaside-coffee.webp')) &&
+    fs.existsSync(path.join(assetsDir, 'character', 'creative-studio-vision.webp')),
+  'Optimized profile images exist in public/assets/character/'
+);
+assert(
+  portfolioTs.includes('personal-seaside-coffee.webp') &&
+    portfolioTs.includes('creative-studio-vision.webp'),
+  'Central portfolio data references new personal and creative profile images'
+);
+assert(
+  personalTsx.includes('aspect-[4/3]') &&
+    creativeUpgradedTsx.includes('aspect-square'),
+  'Responsive aspect ratios preserved without cropping: 4:3 for Personal and 1:1 for Creative'
+);
+
 // Final Summary
 console.log('\n======================================================');
 console.log(`TEST RESULTS: ${passedTests} / ${totalTests} PASSED`);

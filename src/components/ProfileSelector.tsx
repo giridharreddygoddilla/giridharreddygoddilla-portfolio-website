@@ -37,7 +37,7 @@ export function ProfileAvatar({ id, size = 'lg' }: { id: ProfileId; size?: 'sm' 
         src={imageSrc}
         alt={`${p.name} profile`}
         className={`w-full h-full transition duration-500 group-hover:scale-105 ${
-          isOriginalPhoto ? 'object-contain' : 'object-cover object-top'
+          isOriginalPhoto ? 'object-contain' : 'object-cover object-center'
         }`}
       />
       {!isOriginalPhoto && (

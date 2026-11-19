@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { characterAssets } from '../data/portfolio';
+import { characterAssets, profile } from '../data/portfolio';
 import { playClick } from '../hooks/useSoundFX';
 import { getAllLockStates, subscribeLockStates } from '../services/lockManager';
 
@@ -73,6 +73,12 @@ export default function PersistentPageSwitcher({
 
   const currentPage = pages.find((p) => p.id === activePage) ?? pages[0];
 
+  const switcherThumbnails: Record<PageId, string> = {
+    home: characterAssets.hero.src,
+    recruiter: profile.recruiterPhoto.src,
+    creative: characterAssets.walking.src,
+  };
+
   return (
     <div className="relative inline-block text-left" ref={containerRef}>
       {/* 
@@ -94,9 +100,11 @@ export default function PersistentPageSwitcher({
         {/* Small thumbnail with gold border (from reference screenshot) */}
         <div className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-lg overflow-hidden border-[1.5px] border-[#D6AD62]/80 bg-[#11131A] shadow shrink-0">
           <img
-            src={characterAssets.thumbnail.src}
-            alt={characterAssets.thumbnail.alt}
-            className="w-full h-full object-cover object-center group-hover:scale-105 transition duration-300"
+            src={switcherThumbnails[activePage] || characterAssets.thumbnail.src}
+            alt={`${currentPage.name} Profile Thumbnail`}
+            className={`w-full h-full ${
+              activePage === 'recruiter' ? 'object-contain' : 'object-cover object-center'
+            } group-hover:scale-105 transition duration-300`}
           />
         </div>
 

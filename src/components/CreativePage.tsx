@@ -313,18 +313,18 @@ export default function CreativePage({
             A CANVAS OF IMAGINATION. A FUTURE OF POSSIBILITIES.
           </p>
 
-          {/* Signature Walking Visual */}
-          <div className="relative mx-auto w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 rounded-3xl overflow-hidden ring-2 ring-[#ffb547]/40 shadow-2xl shadow-[#ffb547]/20 mb-10 bg-[#11131A]">
+          {/* Signature Creative Visual — Studio Innovation Workspace with Paintings & AI */}
+          <div className="relative mx-auto w-full max-w-xs sm:max-w-sm md:max-w-md aspect-square rounded-3xl overflow-hidden ring-2 ring-[#ffb547]/40 shadow-2xl shadow-[#ffb547]/25 mb-10 bg-[#11131A] group">
             <img
               src={characterAssets.walking.src}
-              alt="Giridhar Reddy Goddilla - Creative Identity Portrait"
-              className="w-full h-full object-cover object-top"
+              alt="Giridhar Reddy Goddilla - Creative Studio Workspace with Paintings, AI & Passions"
+              className="w-full h-full object-cover object-center group-hover:scale-102 transition duration-700"
               loading="eager"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-            <div className="absolute bottom-2 inset-x-0 text-center">
-              <span className="font-mono text-[10px] tracking-wider uppercase text-white/80 bg-black/60 px-2 py-0.5 rounded-full border border-white/10">
-                GIRIDHAR REDDY GODDILLA
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+            <div className="absolute bottom-3 inset-x-0 text-center pointer-events-none">
+              <span className="font-mono text-[10px] tracking-wider uppercase text-white/90 bg-black/70 px-3 py-1 rounded-full border border-white/15 backdrop-blur-sm">
+                GIRIDHAR REDDY GODDILLA • CREATIVE STUDIO
               </span>
             </div>
           </div>
