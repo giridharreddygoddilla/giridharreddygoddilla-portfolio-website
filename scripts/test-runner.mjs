@@ -228,6 +228,101 @@ assert(
   'Compact mobile 2-column / desktop 3-column grid active and Developer completely removed from navigation & routing'
 );
 
+// TEST 11: Personal Profile Cinematic Digital Autobiography Verification
+console.log('\n11. Checking Personal Profile Cinematic Digital Autobiography...');
+const personalTsx = fs.readFileSync(path.join(rootDir, 'src', 'components', 'PersonalPage.tsx'), 'utf-8');
+
+assert(
+  personalTsx.includes('THE MAN BEHIND IT ALL.') &&
+    personalTsx.includes('ROOTED IN TRADITION. BUILT BY PASSION. DRIVEN BY PURPOSE.') &&
+    personalTsx.includes('Giridhar Reddy Goddilla') &&
+    personalTsx.includes('This is my personal world.'),
+  'Personal profile has exact hero title, subtitle, and prologue introduction'
+);
+
+assert(
+  personalTsx.includes('ROOTS THAT NEVER FADE.') &&
+    personalTsx.includes('FAITH THAT GUIDES ME.') &&
+    personalTsx.includes('A MINDSET THAT REFUSES TO GIVE UP.') &&
+    personalTsx.includes('THE GAME IS MORE THAN A GAME.') &&
+    personalTsx.includes('THE FREEDOM OF TWO WHEELS.') &&
+    personalTsx.includes('THE LOVE FOR THE OPEN ROAD.') &&
+    personalTsx.includes('DISCIPLINE IS A LIFESTYLE.') &&
+    personalTsx.includes('THE LITTLE THINGS THAT MAKE ME ME.') &&
+    personalTsx.includes('ONE LIFE. COUNTLESS EXPERIENCES.'),
+  'All 9 story chapters are rendered in PersonalPage with exact headings'
+);
+
+assert(
+  personalTsx.includes('VIRAT KOHLI') &&
+    personalTsx.includes('ROYAL CHALLENGERS BENGALURU') &&
+    personalTsx.includes('FOOTBALL') &&
+    personalTsx.includes('CHESS') &&
+    personalTsx.includes('FORMULA 1'),
+  'Sports passion correctly honors Virat Kohli, RCB, Football, Chess, and Formula 1'
+);
+
+assert(
+  personalTsx.includes('ROYAL ENFIELD 350') &&
+    personalTsx.includes('BAJAJ PULSAR NS200') &&
+    personalTsx.includes('1969 FORD MUSTANG GT FASTBACK') &&
+    personalTsx.includes('DREAM CAR') &&
+    personalTsx.includes('NOT CURRENTLY OWNED'),
+  'Accurately distinguishes owned motorcycles (RE350, Pulsar NS200) and marks 1969 Mustang GT as dream car'
+);
+
+assert(
+  personalTsx.includes('WATCH COLLECTOR') &&
+    personalTsx.includes('PEACE IN SOLITUDE') &&
+    personalTsx.includes('FAMILY ANCHOR') &&
+    personalTsx.includes('THIS IS WHO I AM.'),
+  'Includes watch collecting, solitude, family devotion, and authentic closing statement'
+);
+
+// TEST 12: Creative Profile Art Gallery & AI Innovation Studio Verification
+console.log('\n12. Checking Creative Profile Art Gallery & AI Innovation Studio...');
+const creativeUpgradedTsx = fs.readFileSync(path.join(rootDir, 'src', 'components', 'CreativePage.tsx'), 'utf-8');
+
+assert(
+  creativeUpgradedTsx.includes('THE MIND THAT CREATES.') &&
+    creativeUpgradedTsx.includes('A CANVAS OF IMAGINATION. A FUTURE OF POSSIBILITIES.') &&
+    creativeUpgradedTsx.includes('WHERE MY CREATIVE JOURNEY BEGAN.') &&
+    creativeUpgradedTsx.includes('I HAVE PAINTED MORE THAN 100 PAINTINGS.') &&
+    creativeUpgradedTsx.includes('100+ PAINTINGS. COUNTLESS IDEAS. ONE CREATIVE JOURNEY.'),
+  'Creative profile honors 100+ paintings journey with exact headings and milestones'
+);
+
+assert(
+  creativeUpgradedTsx.includes('selectedArtwork') &&
+    creativeUpgradedTsx.includes('filteredPaintings') &&
+    creativeUpgradedTsx.includes('ESC to close') &&
+    creativeUpgradedTsx.includes('Zoom Canvas'),
+  'Interactive art gallery includes category filtering, canvas cards, and Lightbox modal'
+);
+
+assert(
+  creativeUpgradedTsx.includes('ARTIFICIAL INTELLIGENCE') &&
+    creativeUpgradedTsx.includes('THE DREAM OF BECOMING AN AI ENGINEER.') &&
+    creativeUpgradedTsx.includes('ASPIRATIONAL GOAL • LEARNING PATHWAY') &&
+    creativeUpgradedTsx.includes('FROM IMAGINATION TO ENTREPRENEURSHIP.') &&
+    creativeUpgradedTsx.includes('WHERE ART MEETS TECHNOLOGY.') &&
+    creativeUpgradedTsx.includes('THE JOURNEY IS STILL BEING CREATED.') &&
+    creativeUpgradedTsx.includes('THIS IS WHAT I CAN BECOME.'),
+  'AI passion, aspirational AI engineer path, and entrepreneurship vision are truthfully presented'
+);
+
+// TEST 13: Protected Professional Profile Zero-Change Regression Lock
+console.log('\n13. Checking Professional (Recruiter) Zero-Change Regression Lock...');
+try {
+  const diffOutput = execSync('git diff backup-before-personal-creative-upgrade -- src/components/RecruiterDossier.tsx', {
+    cwd: rootDir,
+    encoding: 'utf-8',
+  }).trim();
+  assert(diffOutput === '', 'RecruiterDossier.tsx is 100% UNTOUCHED (0-byte diff against backup branch)');
+} catch (e) {
+  assert(false, `Regression check failed: ${e.message}`);
+}
+
 // Final Summary
 console.log('\n======================================================');
 console.log(`TEST RESULTS: ${passedTests} / ${totalTests} PASSED`);

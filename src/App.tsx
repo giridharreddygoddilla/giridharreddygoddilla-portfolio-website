@@ -1,6 +1,6 @@
-import { lazy, Suspense, useCallback, useEffect, useState, type ReactNode } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
-import { viewerProfiles, type ProfileId, type Project, type SectionId } from './data/portfolio';
+import { type ProfileId, type Project } from './data/portfolio';
 import { SmoothScrollProvider, useSmoothScroll } from './hooks/smoothScroll';
 import OpeningSequence from './components/OpeningSequence';
 import ProfileSelector from './components/ProfileSelector';
@@ -17,18 +17,7 @@ import {
 } from './services/lockManager';
 
 // Profile experiences & overlays are code-split and loaded ONLY after server authorization
-const Hero = lazy(() => import('./components/Hero'));
-const ContinueWatching = lazy(() => import('./components/ContinueWatching'));
-const Scene = lazy(() => import('./components/Scene'));
-const About = lazy(() => import('./components/About'));
-const PortraitExperience = lazy(() => import('./components/PortraitExperience'));
-const Seasons = lazy(() => import('./components/Seasons'));
-const Originals = lazy(() => import('./components/Originals'));
-const TopPicks = lazy(() => import('./components/TopPicks'));
-const Skills = lazy(() => import('./components/Skills'));
-const Achievements = lazy(() => import('./components/Achievements'));
-const ResumeSection = lazy(() => import('./components/ResumeViewer'));
-const FinalCTA = lazy(() => import('./components/FinalCTA'));
+const PersonalPage = lazy(() => import('./components/PersonalPage'));
 const RecruiterDossier = lazy(() => import('./components/RecruiterDossier'));
 const CreativePage = lazy(() => import('./components/CreativePage'));
 const PlayIntro = lazy(() => import('./components/PlayIntro'));
@@ -87,14 +76,23 @@ function Series() {
 
   const { lock, unlock } = useSmoothScroll();
 
-  const currentProfile = viewerProfiles.find((p) => p.id === profileId) ?? viewerProfiles[0];
-  const order = currentProfile.order;
-
   useEffect(() => {
     if (stage === 'home') return;
     lock();
     return unlock;
   }, [stage, lock, unlock]);
+
+  useEffect(() => {
+    if (stage === 'profiles') {
+      document.title = 'Giridhar Reddy Goddilla | The Journey';
+    } else if (activePage === 'home') {
+      document.title = 'Giridhar Reddy Goddilla | The Man Behind It All';
+    } else if (activePage === 'creative') {
+      document.title = 'Giridhar Reddy Goddilla | The Mind That Creates';
+    } else if (activePage === 'recruiter') {
+      document.title = 'Giridhar Reddy Goddilla | Professional Profile';
+    }
+  }, [stage, activePage]);
 
   const toggleSound = useCallback(() => {
     const next = !sound;
@@ -273,17 +271,6 @@ function Series() {
   const closeResume = useCallback(() => setResumeOpen(false), []);
   const closeHelp = useCallback(() => setHelpOpen(false), []);
 
-  const sections: Record<SectionId, ReactNode> = {
-    about: <About />,
-    portrait: <PortraitExperience />,
-    journey: <Seasons />,
-    originals: <Originals onOpen={setProject} />,
-    picks: <TopPicks />,
-    skills: <Skills />,
-    moments: <Achievements />,
-    story: <ResumeSection onView={() => setResumeOpen(true)} />,
-  };
-
   return (
     <LayoutGroup>
       <div className="grain" aria-hidden />
@@ -333,30 +320,20 @@ function Series() {
               </div>
             }
           >
-            {/* Profile 1: PERSONAL */}
+            {/* Profile 1: PERSONAL — Cinematic Digital Autobiography */}
             {activePage === 'home' && (
               <main>
-                <Hero
-                  key={`hero-${profileId}`}
-                  onPlay={() => setPlaying(true)}
-                  onResume={() => setResumeOpen(true)}
+                <PersonalPage
                   profileId={profileId}
-                  onSwitchToRecruiter={() => handleNavigate('recruiter')}
-                />
-                <ContinueWatching order={order} />
-                {order.map((id) => (
-                  <Scene key={id} id={id} className={id === 'originals' ? '!py-0 sm:!py-0' : ''}>
-                    {sections[id]}
-                  </Scene>
-                ))}
-                <FinalCTA
-                  onReplay={() => setStage('opening')}
-                  onSwitchToRecruiter={() => handleNavigate('recruiter')}
+                  onNavigateProfessional={() => handleNavigate('recruiter')}
+                  onNavigateCreative={() => handleNavigate('creative')}
+                  onOpenProfileChooser={openProfileChooser}
+                  onOpenResume={() => setResumeOpen(true)}
                 />
               </main>
             )}
 
-            {/* Profile 2: PROFESSIONAL */}
+            {/* Profile 2: PROFESSIONAL — 100% UNTOUCHED & STRICTLY PROTECTED */}
             {activePage === 'recruiter' && (
               <RecruiterDossier
                 onSelectProject={setProject}
@@ -365,12 +342,13 @@ function Series() {
               />
             )}
 
-            {/* Profile 3: CREATIVE */}
+            {/* Profile 3: CREATIVE — 100+ Painting Gallery & AI Innovation Studio */}
             {activePage === 'creative' && (
               <CreativePage
                 onSelectProject={setProject}
                 onNavigateHome={() => handleNavigate('home')}
                 onNavigateProfessional={() => handleNavigate('recruiter')}
+                onOpenProfileChooser={openProfileChooser}
               />
             )}
           </Suspense>
